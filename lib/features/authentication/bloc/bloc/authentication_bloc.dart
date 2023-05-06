@@ -1,31 +1,24 @@
 import 'dart:async';
-
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:user_repository/user_repository.dart';
+import 'package:scandium/product/models/user.dart';
+import 'package:scandium/product/repositories/user/user_repository.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
-  AuthenticationBloc(
-      {required AuthenticationRepository authenticationRepository,
-      required UserRepository userRepository})
-      : _authenticationRepository = authenticationRepository,
-        _userRepository = userRepository,
-        super(const AuthenticationState.unAuthenticated()) {
+  AuthenticationBloc({required UserRepository userRepository})
+      : _userRepository = userRepository,
+        super(const AuthenticationState._(user: null)) {
     on<_AuthenticationStatusChanged>(_onAuthenticationStatusChanged);
-    on<AuthenticationLogoutRequested>(_onAuthenticationLogoutRequested);
-    _authenticationStatusSubscription = _authenticationRepository.status.listen(
+    _authenticationStatusSubscription = _userRepository.status.listen(
       (status) => add(_AuthenticationStatusChanged(status)),
     );
   }
-  final AuthenticationRepository _authenticationRepository;
   final UserRepository _userRepository;
-  late StreamSubscription<AuthenticationStatus>
-      _authenticationStatusSubscription;
+  late StreamSubscription<User?> _authenticationStatusSubscription;
 
   @override
   Future<void> close() {
@@ -36,28 +29,6 @@ class AuthenticationBloc
   Future<void> _onAuthenticationStatusChanged(
       _AuthenticationStatusChanged event,
       Emitter<AuthenticationState> emit) async {
-    switch (event.status) {
-      case AuthenticationStatus.unAuthenticated:
-        emit(const AuthenticationState.unAuthenticated());
-        break;
-      case AuthenticationStatus.authenticated:
-        final user = await _userRepository.getUser();
-        if (user != null) {
-          emit(AuthenticationState.authenticated(user));
-        } else {
-          emit(const AuthenticationState.unAuthenticated());
-        }
-        break;
-      default:
-        emit(const AuthenticationState.unAuthenticated());
-        break;
-    }
-  }
-
-  void _onAuthenticationLogoutRequested(
-    AuthenticationLogoutRequested event,
-    Emitter<AuthenticationState> emit,
-  ) {
-    _authenticationRepository.logOut();
+    emit(AuthenticationState._(user: event.user));
   }
 }

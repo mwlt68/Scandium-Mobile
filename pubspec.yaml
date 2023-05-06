@@ -8,32 +8,29 @@ environment:
   sdk: '>=2.19.5 <3.0.0'
 
 dependencies:
-  authentication_repository:
-    path: packages/authentication_repository
+
+  uuid: ^3.0.0
   bloc: ^8.1.0
   equatable: ^2.0.3
   flutter_bloc: ^8.1.1
   formz: ^0.4.0
-  user_repository:
-    path: packages/user_repository
+  dio: ^5.1.1
+  shared_preferences: ^2.1.0
+  jwt_decoder: ^2.0.1
+  cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
 
-
-  cupertino_icons: ^1.0.2
-
 dev_dependencies:
   bloc_test: ^9.1.0
-  flutter_test:
-    sdk: flutter
   mocktail: ^0.3.0
   very_good_analysis: ^3.1.0
-
   flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
 
 
 flutter:
-
 
   uses-material-design: true
 
