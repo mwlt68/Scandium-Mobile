@@ -1,44 +1,20 @@
 import 'package:scandium/core/base/models/mappable.dart';
 
-class BaseResponseModel<T extends IFromMappable> {
-  T? value;
-  bool? isSuccess;
+abstract class BaseResponseModel<T> {
   bool? isCustomException;
   bool? isValidationError;
   List<ErrorResponseContent>? errorContents;
   BaseResponseModel({
-    this.value,
-    this.isSuccess,
     this.isCustomException,
     this.isValidationError,
     this.errorContents,
   });
 
-  factory BaseResponseModel.fromMap(T t, Map<String, dynamic> map) {
-    return BaseResponseModel<T>(
-      value: map['value'] != null
-          ? t.fromMap(map['value'] as Map<String, dynamic>) as T
-          : null,
-      isSuccess: map['isSuccess'] != null ? map['isSuccess'] as bool : null,
-      isCustomException: map['isCustomException'] != null
-          ? map['isCustomException'] as bool
-          : null,
-      isValidationError: map['isValidationError'] != null
-          ? map['isValidationError'] as bool
-          : null,
-      errorContents: map['errorContents'] != null
-          ? (map['errorContents'] as List)
-              .map((e) =>
-                  ErrorResponseContent.fromMap(e as Map<String, dynamic>))
-              .toList()
-          : null,
-    );
-  }
+  BaseResponseModel.fromMap(Map<String, dynamic> map);
 
   String? get errorMessage => errorContents?.map((e) => e.content).join('/n');
 
   bool get hasNotError =>
-      value != null &&
       (isCustomException == null || isCustomException == false) &&
       (isValidationError == null || isValidationError == false) &&
       errorContents == null;
@@ -65,4 +41,78 @@ class ErrorResponseContent {
       content: map['content'] != null ? map['content'] as String : null,
     );
   }
+}
+
+class ListBaseResponseModel<T extends IFromMappable>
+    extends BaseResponseModel<T> {
+  List<T>? value;
+
+  ListBaseResponseModel({
+    bool? isCustomException,
+    bool? isValidationError,
+    List<ErrorResponseContent>? errorContents,
+    this.value,
+  }) : super(
+            isCustomException: isCustomException,
+            isValidationError: isValidationError,
+            errorContents: errorContents);
+
+  ListBaseResponseModel<T> fromJson(
+      Map<String, dynamic> map, Function(Map<String, dynamic>) create) {
+    return ListBaseResponseModel<T>(
+        isCustomException: map['isCustomException'] != null
+            ? map['isCustomException'] as bool
+            : null,
+        isValidationError: map['isValidationError'] != null
+            ? map['isValidationError'] as bool
+            : null,
+        errorContents: map['errorContents'] != null
+            ? (map['errorContents'] as List)
+                .map((e) =>
+                    ErrorResponseContent.fromMap(e as Map<String, dynamic>))
+                .toList()
+            : null,
+        value: map['value'] != null
+            ? (map['value'] as List).map((e) => create(e) as T).toList()
+            : null);
+  }
+
+  @override
+  bool get hasNotError => value != null && super.hasNotError;
+}
+
+class SingleBaseResponseModel<T extends IFromMappable>
+    extends BaseResponseModel<T> {
+  T? value;
+
+  SingleBaseResponseModel({
+    bool? isCustomException,
+    bool? isValidationError,
+    List<ErrorResponseContent>? errorContents,
+    this.value,
+  }) : super(
+            isCustomException: isCustomException,
+            isValidationError: isValidationError,
+            errorContents: errorContents);
+
+  SingleBaseResponseModel<T> fromJson(
+      Map<String, dynamic> map, Function(Map<String, dynamic>) create) {
+    return SingleBaseResponseModel<T>(
+        isCustomException: map['isCustomException'] != null
+            ? map['isCustomException'] as bool
+            : null,
+        isValidationError: map['isValidationError'] != null
+            ? map['isValidationError'] as bool
+            : null,
+        errorContents: map['errorContents'] != null
+            ? (map['errorContents'] as List)
+                .map((e) =>
+                    ErrorResponseContent.fromMap(e as Map<String, dynamic>))
+                .toList()
+            : null,
+        value: map['value'] != null ? create(map['value']) as T : null);
+  }
+
+  @override
+  bool get hasNotError => value != null && super.hasNotError;
 }

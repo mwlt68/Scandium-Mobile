@@ -10,6 +10,6 @@ void main() {
   test('Authentication', () async {
     final response = await _userRepository.authenticate(
         username: 'string1', password: 'String1');
-    expect(response.model?.value, isNot(equals(null)));
+    expect(response?.value, isNot(equals(null)));
   });
 }

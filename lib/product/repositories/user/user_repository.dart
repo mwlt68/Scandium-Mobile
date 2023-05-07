@@ -1,12 +1,12 @@
 import 'dart:async';
+import 'package:scandium/core/base/models/base_response_model.dart';
 import 'package:scandium/core/init/network/network_manager.dart';
-import 'package:scandium/core/init/network/network_response_model.dart';
 import 'package:scandium/core/init/storage/storage_manager.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:scandium/product/repositories/user/authentication_request_model.dart';
 
 import '../../constants/storage_constants.dart';
-import '../../models/user.dart';
+import '../../models/base/user.dart';
 
 class _AuthenticationPaths {
   static const authenticate = "authentication";
@@ -35,10 +35,10 @@ class UserRepository {
     yield* _controller.stream;
   }
 
-  Future<NetworkResponseModel<User>> authenticate(
+  Future<SingleBaseResponseModel<User>?> authenticate(
       {required String username, required String password}) async {
-    final response =
-        await _networkManager.post<AuthenticationRequestModel, User>(
+    final response = await _networkManager
+        .post<SingleBaseResponseModel<User>, User, AuthenticationRequestModel>(
       User(),
       _AuthenticationPaths.authenticate,
       data: AuthenticationRequestModel(username: username, password: password),
@@ -50,11 +50,11 @@ class UserRepository {
     } else {
       _controller.add(null);
     }
-    return response;
+    return response.model;
   }
 
-  void logOut() {
-    StorageManager.remove(StorageConstants.instance.userKey);
+  Future<void> logOut() async {
+    await StorageManager.remove(StorageConstants.instance.userKey);
     _controller.add(null);
   }
 
