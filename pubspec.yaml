@@ -18,6 +18,7 @@ dependencies:
   shared_preferences: ^2.1.0
   jwt_decoder: ^2.0.1
   cupertino_icons: ^1.0.2
+  flutter_svg: ^2.0.5
   flutter:
     sdk: flutter
 
@@ -33,4 +34,5 @@ dev_dependencies:
 flutter:
 
   uses-material-design: true
-
+  assets:
+    - assets/
