@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:scandium/product/models/user.dart';
+import 'package:scandium/product/models/base/user.dart';
 import 'package:scandium/product/repositories/user/user_repository.dart';
 
 part 'authentication_event.dart';
