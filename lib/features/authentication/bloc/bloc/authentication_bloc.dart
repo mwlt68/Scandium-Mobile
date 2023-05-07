@@ -13,7 +13,7 @@ class AuthenticationBloc
       : _userRepository = userRepository,
         super(const AuthenticationState._(user: null)) {
     on<_AuthenticationStatusChanged>(_onAuthenticationStatusChanged);
-    _authenticationStatusSubscription = _userRepository.status.listen(
+    _authenticationStatusSubscription = _userRepository.currentUser.listen(
       (status) => add(_AuthenticationStatusChanged(status)),
     );
   }

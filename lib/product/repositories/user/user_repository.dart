@@ -19,7 +19,7 @@ class UserRepository {
   UserRepository(INetworkManager networkManager)
       : _networkManager = networkManager;
 
-  Stream<User?> get status async* {
+  Stream<User?> get currentUser async* {
     var user = await StorageManager.getObject(
         User(), StorageConstants.instance.userKey);
     if (user?.token != null) {
