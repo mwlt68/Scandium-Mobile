@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scandium/features/authentication/bloc/bloc/authentication_bloc.dart';
-import 'package:scandium/features/home/home_page.dart';
+import 'package:scandium/features/home/view/home_page.dart';
 import 'package:scandium/features/login/view/login_page.dart';
 import 'package:scandium/features/splash/splash_page.dart';
+import 'package:scandium/product/constants/application_constants.dart';
 import 'package:scandium/product/network/product_network_manager.dart';
 import 'product/repositories/user/user_repository.dart';
 
@@ -75,6 +76,10 @@ class _AppViewState extends State<AppView> {
           child: child,
         );
       },
+      theme: ThemeData(
+          primaryColor: Color(ApplicationConstants.instance.blueColor),
+          appBarTheme: AppBarTheme(
+              backgroundColor: Color(ApplicationConstants.instance.blueColor))),
       onGenerateRoute: (_) => SplashPage.route(),
     );
   }
