@@ -18,6 +18,7 @@ abstract class INetworkManager {
     void Function(int, int)? onSendProgress,
     void Function(int, int)? onReceiveProgress,
   });
+
   Future<NetworkResponseModel<BR, Res>>
       get<BR extends BaseResponseModel<Res>, Res extends IFromMappable>(
     Res res,
@@ -30,7 +31,7 @@ abstract class INetworkManager {
   });
 }
 
-class NetworkManager extends INetworkManager {
+abstract class NetworkManager extends INetworkManager {
   NetworkManager({required this.baseOptions}) {
     _dio = Dio(baseOptions);
     if (!kIsWeb) {
@@ -45,6 +46,8 @@ class NetworkManager extends INetworkManager {
 
   final BaseOptions baseOptions;
   late Dio _dio;
+
+  Future<String> getToken();
 
   Future<NetworkResponseModel<BR, Res>> request<
       BR extends BaseResponseModel<Res>,
@@ -61,6 +64,7 @@ class NetworkManager extends INetworkManager {
   }) async {
     var networkResponse = NetworkResponseModel<BR, Res>();
     try {
+      options = await setHeaderToken(options);
       var response = await _dio.request(path,
           data: req?.toMap(),
           onSendProgress: onSendProgress,
@@ -78,6 +82,15 @@ class NetworkManager extends INetworkManager {
       }
     }
     return networkResponse;
+  }
+
+  Future<Options> setHeaderToken(Options? options) async {
+    options ??= Options();
+    var token = await getToken();
+    var tokenMap = {'Authorization': token};
+    options.headers ??= {};
+    options.headers!.addAll(tokenMap);
+    return options;
   }
 
   BR? getBaseResponse<BR extends BaseResponseModel<Res>,
