@@ -6,6 +6,7 @@ import 'package:scandium/features/login/view/login_page.dart';
 import 'package:scandium/features/splash/splash_page.dart';
 import 'package:scandium/product/constants/application_constants.dart';
 import 'package:scandium/product/network/product_network_manager.dart';
+import 'package:scandium/product/repositories/message/message_repository.dart';
 import 'product/repositories/user/user_repository.dart';
 
 class App extends StatefulWidget {
@@ -32,8 +33,13 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider.value(
-      value: _userRepository,
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<UserRepository>(
+            create: (context) => _userRepository),
+        RepositoryProvider<MessageRepository>(
+            create: (context) => MessageRepository(ProductNetworkManager())),
+      ],
       child: BlocProvider(
           create: (context) =>
               AuthenticationBloc(userRepository: _userRepository),
