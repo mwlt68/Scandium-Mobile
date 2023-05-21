@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:scandium/product/models/chat_model.dart';
+import 'package:scandium/product/models/response/message_response_model.dart';
+import 'package:intl/intl.dart';
 
 class CustomCard extends StatelessWidget {
-  const CustomCard({Key? key, required this.chatModel, required this.sourchat})
+  const CustomCard(
+      {Key? key, required this.messageModel, required this.sourceMessageModel})
       : super(key: key);
-  final ChatModel chatModel;
-  final ChatModel sourchat;
+  final MessageResponseModel messageModel;
+  final MessageResponseModel? sourceMessageModel;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class CustomCard extends StatelessWidget {
                 radius: 24,
                 backgroundColor: Colors.grey,
                 child: SvgPicture.asset(
-                  chatModel.isGroup ? "assets/groups.svg" : "assets/person.svg",
+                  false ? "assets/groups.svg" : "assets/person.svg",
                   height: 32,
                   width: 32,
                   colorFilter:
@@ -41,7 +43,7 @@ class CustomCard extends StatelessWidget {
               ),
             ),
             title: Text(
-              chatModel.name!,
+              messageModel.sender?.username ?? "Sender",
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -58,14 +60,17 @@ class CustomCard extends StatelessWidget {
                   width: 3,
                 ),
                 Text(
-                  chatModel.currentMessage!,
+                  messageModel.content ?? '',
                   style: const TextStyle(
                     fontSize: 13,
                   ),
                 ),
               ],
             ),
-            trailing: Text(chatModel.time!),
+            trailing: Text(messageModel.createDate != null
+                ? DateFormat('yyyy-MM-dd – kk:mm')
+                    .format(messageModel.createDate!)
+                : ''),
           )
         ],
       ),
