@@ -3,13 +3,15 @@ import 'package:scandium/core/base/models/base_response_model.dart';
 import 'package:scandium/core/init/network/network_manager.dart';
 import 'package:scandium/core/init/storage/storage_manager.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:scandium/product/models/response/user_response_model.dart';
 import 'package:scandium/product/repositories/user/authentication_request_model.dart';
 
 import '../../constants/storage_constants.dart';
 import '../../models/base/user.dart';
 
 class _AuthenticationPaths {
-  static const authenticate = "authentication";
+  static const authenticate = "user/authentication";
+  static const searching = "user/searching";
 }
 
 class UserRepository {
@@ -50,6 +52,16 @@ class UserRepository {
     } else {
       _controller.add(null);
     }
+    return response.model;
+  }
+
+  Future<ListBaseResponseModel<UserResponseModel>?> searchUser(
+      {required String username}) async {
+    var queryParameters = {'username': username};
+    final response = await _networkManager
+        .get<ListBaseResponseModel<UserResponseModel>, UserResponseModel>(
+            UserResponseModel(), _AuthenticationPaths.searching,
+            queryParameters: queryParameters);
     return response.model;
   }
 

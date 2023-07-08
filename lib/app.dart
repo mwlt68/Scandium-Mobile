@@ -6,6 +6,7 @@ import 'package:scandium/features/login/view/login_page.dart';
 import 'package:scandium/features/splash/splash_page.dart';
 import 'package:scandium/product/constants/application_constants.dart';
 import 'package:scandium/product/network/product_network_manager.dart';
+import 'package:scandium/product/repositories/friendship_request/friendship_request_repository.dart';
 import 'package:scandium/product/repositories/message/message_repository.dart';
 import 'product/repositories/user/user_repository.dart';
 
@@ -39,6 +40,9 @@ class _AppState extends State<App> {
             create: (context) => _userRepository),
         RepositoryProvider<MessageRepository>(
             create: (context) => MessageRepository(ProductNetworkManager())),
+        RepositoryProvider<FriendshipRequestRepository>(
+            create: (context) =>
+                FriendshipRequestRepository(ProductNetworkManager())),
       ],
       child: BlocProvider(
           create: (context) =>

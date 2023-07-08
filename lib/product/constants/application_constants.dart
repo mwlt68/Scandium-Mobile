@@ -13,4 +13,6 @@ class ApplicationConstants {
   final int blueColor = 0xFF3FC1C9;
   final int whiteColor = 0xFFF5F5F5;
   final int pinkColor = 0xFFFC5185;
+
+  final String unexpectedErrorDefaultMessage = 'Unexpected error occured !';
 }
