@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scandium/features/contact/contact_request/view/contact_request_page.dart';
+import 'package:scandium/features/contact/new_contact/view/new_contact_page.dart';
 import 'package:scandium/features/home/bloc/home_bloc.dart';
 import 'package:scandium/features/home/view/chat_page.dart';
-import 'package:scandium/product/network/product_network_manager.dart';
 import 'package:scandium/product/repositories/message/message_repository.dart';
 import 'package:scandium/product/repositories/user/user_repository.dart';
 
@@ -54,7 +55,7 @@ class _HomePageState extends State<HomePage>
                 sourceMessageModel: null,
               ),
               const Text("STATUS"),
-              const Text("Calls"),
+              const Text("CALLS"),
             ],
           );
         } else if (state is HomeErrorState) {
@@ -66,10 +67,17 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  AppBar _scaffoldAppBar() => AppBar(
-        title: const Text("Whatsapp Clone"),
-        actions: _appBarActions,
-        bottom: _appBarBottom(),
+  PreferredSize _scaffoldAppBar() => PreferredSize(
+        preferredSize: const Size.fromHeight(100),
+        child: BlocBuilder<HomeBloc, HomeState>(
+          builder: (context, state) {
+            return AppBar(
+              title: const Text("Whatsapp Clone"),
+              actions: _appBarActions,
+              bottom: _appBarBottom(),
+            );
+          },
+        ),
       );
 
   List<Widget> get _appBarActions {
@@ -94,16 +102,12 @@ class _HomePageState extends State<HomePage>
               value: "Starred messages",
               child: Text("Starred messages"),
             ),
-            const PopupMenuItem(
-              value: "Settings",
-              child: Text("Settings"),
-            ),
+            const PopupMenuItem(value: "Settings", child: Text("Settings")),
             PopupMenuItem(
               value: "LogOut",
               child: const Text("Log Out"),
               onTap: () async {
-                await UserRepository(ProductNetworkManager()).logOut();
-                //context.read<HomeBloc>().add(const LogOutSubmitted());
+                contesxt.read<HomeBloc>().add(const LogOutSubmitted());
               },
             ),
           ];
