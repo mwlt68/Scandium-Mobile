@@ -9,6 +9,7 @@ class _FriendshipRequestApiPaths {
   static const String getRequests = "friendship/request";
   static const String follow = "friendship/insert";
   static const String approve = "friendship/approve";
+  static const String allAccepted = "friendship/all";
 }
 
 class FriendshipRequestRepository {
@@ -45,6 +46,14 @@ class FriendshipRequestRepository {
             ApproveRequestModel>(
         FriendshipResponseModel(), _FriendshipRequestApiPaths.approve,
         data: ApproveRequestModel(senderId: senderId));
+    return response.model;
+  }
+
+  Future<ListBaseResponseModel<FriendshipResponseModel>?> allAccepted() async {
+    final response = await _networkManager.get<
+            ListBaseResponseModel<FriendshipResponseModel>,
+            FriendshipResponseModel>(
+        FriendshipResponseModel(), _FriendshipRequestApiPaths.allAccepted);
     return response.model;
   }
 }

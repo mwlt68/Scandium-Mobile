@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scandium/features/contact/select_contact/select_contact.dart';
+import 'package:scandium/features/contact/select_contact/view/select_contact_page.dart';
 import 'package:scandium/product/models/response/message_response_model.dart';
 import 'package:scandium/product/widgets/custom_card.dart';
 
@@ -20,8 +20,10 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (builder) => SelectContact()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (builder) => const SelectContactPage()));
         },
         child: const Icon(
           Icons.chat,

@@ -15,7 +15,7 @@ class _AuthenticationPaths {
 }
 
 class UserRepository {
-  final _controller = StreamController<User?>();
+  final _controller = StreamController<User?>.broadcast();
   late final INetworkManager _networkManager;
 
   UserRepository(INetworkManager networkManager)
