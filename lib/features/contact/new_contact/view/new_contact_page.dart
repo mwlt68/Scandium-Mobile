@@ -18,11 +18,6 @@ class _NewContactPageState extends State<NewContactPage> {
   late TextEditingController searchValueController;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return BlocProvider(
         create: (context) => NewContactBloc(
