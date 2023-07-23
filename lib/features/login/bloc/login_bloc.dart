@@ -1,24 +1,23 @@
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:scandium/features/login/models/password.dart';
 import 'package:scandium/features/login/models/username.dart';
+import 'package:scandium/product/repositories/user/user_repository.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc({
-    required AuthenticationRepository authenticationRepository,
-  })  : _authenticationRepository = authenticationRepository,
+  LoginBloc({required UserRepository userRepository})
+      : _userRepository = userRepository,
         super(const LoginState()) {
     on<LoginUsernameChanged>(_onUsernameChanged);
     on<LoginPasswordChanged>(_onPasswordChanged);
     on<LoginSubmitted>(_onSubmitted);
   }
 
-  final AuthenticationRepository _authenticationRepository;
+  final UserRepository _userRepository;
 
   void _onUsernameChanged(
     LoginUsernameChanged event,
@@ -51,11 +50,19 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (state.status.isValidated) {
       emit(state.copyWith(status: FormzStatus.submissionInProgress));
       try {
-        await _authenticationRepository.logIn(
+        var response = await _userRepository.authenticate(
             username: state.username.value, password: state.password.value);
-        emit(state.copyWith(status: FormzStatus.submissionSuccess));
+        if (response?.value != null && response!.hasNotError) {
+          emit(state.copyWith(
+              status: FormzStatus.submissionSuccess, errorMessage: null));
+        } else {
+          emit(state.copyWith(
+              status: FormzStatus.submissionFailure,
+              errorMessage: response?.errorMessage));
+        }
       } catch (e) {
-        emit(state.copyWith(status: FormzStatus.submissionFailure));
+        emit(state.copyWith(
+            status: FormzStatus.submissionFailure, errorMessage: null));
       }
     }
   }

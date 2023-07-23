@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:scandium/features/login/bloc/login_bloc.dart';
+import 'package:scandium/features/register/view/register_page.dart';
+import 'package:scandium/product/constants/application_constants.dart';
+import 'package:scandium/product/widgets/conditional_circular_progress.dart';
 
 class LoginForm extends StatelessWidget {
   const LoginForm({super.key});
@@ -13,8 +16,10 @@ class LoginForm extends StatelessWidget {
         if (state.status.isSubmissionFailure) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(
-                const SnackBar(content: Text('Authentication failure!')));
+            ..showSnackBar(SnackBar(
+                content: Text(state.errorMessage ??
+                    ApplicationConstants
+                        .instance.unexpectedErrorDefaultMessage)));
         }
       },
       child: Align(
@@ -78,17 +83,28 @@ class _LoginButton extends StatelessWidget {
     return BlocBuilder<LoginBloc, LoginState>(
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
-        return state.status.isSubmissionInProgress
-            ? const CircularProgressIndicator()
-            : ElevatedButton(
-                key: const Key('loginForm_continue_raisedButton'),
-                onPressed: state.status.isValidated
-                    ? () {
-                        context.read<LoginBloc>().add(const LoginSubmitted());
-                      }
-                    : null,
-                child: const Text('Login'),
-              );
+        return ConditionalCircularProgress(
+            isLoading: state.status.isSubmissionInProgress,
+            child: Row(
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => RegisterPage()),
+                        (route) => false);
+                  },
+                  child: const Text('Register Page'),
+                ),
+                ElevatedButton(
+                  onPressed: state.status.isValidated
+                      ? () {
+                          context.read<LoginBloc>().add(const LoginSubmitted());
+                        }
+                      : null,
+                  child: const Text('Login'),
+                ),
+              ],
+            ));
       },
     );
   }
