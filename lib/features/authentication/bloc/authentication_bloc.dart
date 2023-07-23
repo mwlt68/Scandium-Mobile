@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:scandium/product/models/user.dart';
+import 'package:scandium/product/models/base/user.dart';
 import 'package:scandium/product/repositories/user/user_repository.dart';
 
 part 'authentication_event.dart';
@@ -13,7 +13,7 @@ class AuthenticationBloc
       : _userRepository = userRepository,
         super(const AuthenticationState._(user: null)) {
     on<_AuthenticationStatusChanged>(_onAuthenticationStatusChanged);
-    _authenticationStatusSubscription = _userRepository.status.listen(
+    _authenticationStatusSubscription = _userRepository.currentUser.listen(
       (status) => add(_AuthenticationStatusChanged(status)),
     );
   }

@@ -1,14 +1,14 @@
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:flutter/foundation.dart';
 import 'package:scandium/core/base/models/mappable.dart';
 import 'package:scandium/core/base/models/base_response_model.dart';
 import 'package:scandium/core/init/network/network_response_model.dart';
 
 abstract class INetworkManager {
-  Future<NetworkResponseModel<Res>>
-      post<Req extends IToMappable, Res extends IFromMappable>(
+  Future<NetworkResponseModel<BR, Res>> post<BR extends BaseResponseModel<Res>,
+      Res extends IFromMappable, Req extends IToMappable>(
     Res res,
     String path, {
     Req? data,
@@ -19,7 +19,8 @@ abstract class INetworkManager {
     void Function(int, int)? onReceiveProgress,
   });
 
-  Future<NetworkResponseModel<Res>> get<Res extends IFromMappable>(
+  Future<NetworkResponseModel<BR, Res>>
+      get<BR extends BaseResponseModel<Res>, Res extends IFromMappable>(
     Res res,
     String path, {
     Map<String, dynamic>? queryParameters,
@@ -30,23 +31,28 @@ abstract class INetworkManager {
   });
 }
 
-class NetworkManager extends INetworkManager {
+abstract class NetworkManager extends INetworkManager {
   NetworkManager({required this.baseOptions}) {
     _dio = Dio(baseOptions);
-    // ignore: deprecated_member_use
-    (_dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-        (HttpClient dioClient) {
-      dioClient.badCertificateCallback =
-          ((X509Certificate cert, String host, int port) => true);
-      return dioClient;
-    };
+    if (!kIsWeb) {
+      (_dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate =
+          (HttpClient dioClient) {
+        dioClient.badCertificateCallback =
+            ((X509Certificate cert, String host, int port) => true);
+        return dioClient;
+      };
+    }
   }
 
   final BaseOptions baseOptions;
   late Dio _dio;
 
-  Future<NetworkResponseModel<Res>>
-      request<Req extends IToMappable, Res extends IFromMappable>(
+  Future<String> getToken();
+
+  Future<NetworkResponseModel<BR, Res>> request<
+      BR extends BaseResponseModel<Res>,
+      Res extends IFromMappable,
+      Req extends IToMappable>(
     Res res,
     String path, {
     Req? req,
@@ -56,8 +62,9 @@ class NetworkManager extends INetworkManager {
     void Function(int, int)? onSendProgress,
     void Function(int, int)? onReceiveProgress,
   }) async {
-    var networkResponse = NetworkResponseModel<Res>();
+    var networkResponse = NetworkResponseModel<BR, Res>();
     try {
+      options = await setHeaderToken(options);
       var response = await _dio.request(path,
           data: req?.toMap(),
           onSendProgress: onSendProgress,
@@ -77,19 +84,36 @@ class NetworkManager extends INetworkManager {
     return networkResponse;
   }
 
-  BaseResponseModel<Res>? getBaseResponse<Res extends IFromMappable>(
-      Res res, dynamic data) {
+  Future<Options> setHeaderToken(Options? options) async {
+    options ??= Options();
+    var token = await getToken();
+    var tokenMap = {'Authorization': token};
+    options.headers ??= {};
+    options.headers!.addAll(tokenMap);
+    return options;
+  }
+
+  BR? getBaseResponse<BR extends BaseResponseModel<Res>,
+      Res extends IFromMappable>(Res res, dynamic data) {
     try {
-      var a = BaseResponseModel.fromMap(res, data);
-      return a;
+      if (data != null && data['value'] != null) {
+        if (data['value'] is List) {
+          return ListBaseResponseModel<Res>()
+              .fromJson(data, (data) => res.fromMap(data)) as BR;
+        } else {
+          return SingleBaseResponseModel<Res>()
+              .fromJson(data, (data) => res.fromMap(data)) as BR;
+        }
+      }
+      return null;
     } catch (e) {
       return null;
     }
   }
 
   @override
-  Future<NetworkResponseModel<Res>>
-      post<Req extends IToMappable, Res extends IFromMappable>(
+  Future<NetworkResponseModel<BR, Res>> post<BR extends BaseResponseModel<Res>,
+      Res extends IFromMappable, Req extends IToMappable>(
     Res res,
     String path, {
     Req? data,
@@ -111,7 +135,8 @@ class NetworkManager extends INetworkManager {
   }
 
   @override
-  Future<NetworkResponseModel<Res>> get<Res extends IFromMappable>(
+  Future<NetworkResponseModel<BR, Res>>
+      get<BR extends BaseResponseModel<Res>, Res extends IFromMappable>(
     Res res,
     String path, {
     Map<String, dynamic>? queryParameters,

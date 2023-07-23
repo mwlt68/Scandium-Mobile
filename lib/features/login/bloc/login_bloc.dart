@@ -52,13 +52,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       try {
         var response = await _userRepository.authenticate(
             username: state.username.value, password: state.password.value);
-        if (response.model?.value != null && response.model!.hasNotError) {
+        if (response?.value != null && response!.hasNotError) {
           emit(state.copyWith(
               status: FormzStatus.submissionSuccess, errorMessage: null));
         } else {
           emit(state.copyWith(
               status: FormzStatus.submissionFailure,
-              errorMessage: response.model?.errorMessage));
+              errorMessage: response?.errorMessage));
         }
       } catch (e) {
         emit(state.copyWith(
