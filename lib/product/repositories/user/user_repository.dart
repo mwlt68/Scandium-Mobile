@@ -5,6 +5,7 @@ import 'package:scandium/core/init/storage/storage_manager.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:scandium/product/models/response/user_response_model.dart';
 import 'package:scandium/product/repositories/user/authentication_request_model.dart';
+import 'package:scandium/product/repositories/user/register_request_model.dart';
 
 import '../../constants/storage_constants.dart';
 import '../../models/base/user.dart';
@@ -12,6 +13,7 @@ import '../../models/base/user.dart';
 class _AuthenticationPaths {
   static const authenticate = "user/authentication";
   static const searching = "user/searching";
+  static const register = "user/insert";
 }
 
 class UserRepository {
@@ -52,6 +54,17 @@ class UserRepository {
     } else {
       _controller.add(null);
     }
+    return response.model;
+  }
+
+  Future<SingleBaseResponseModel<User>?> register(
+      String username, String password, String passwordConfirm) async {
+    final response = await _networkManager
+        .post<SingleBaseResponseModel<User>, User, RegisterRequestModel>(
+      User(),
+      _AuthenticationPaths.register,
+      data: RegisterRequestModel(username, password, passwordConfirm),
+    );
     return response.model;
   }
 

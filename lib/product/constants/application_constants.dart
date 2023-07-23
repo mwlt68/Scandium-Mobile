@@ -15,4 +15,5 @@ class ApplicationConstants {
   final int pinkColor = 0xFFFC5185;
 
   final String unexpectedErrorDefaultMessage = 'Unexpected error occured !';
+  final String emptyFieldText = 'This field cannot be left blank !';
 }
