@@ -16,4 +16,5 @@ class ApplicationConstants {
 
   final String unexpectedErrorDefaultMessage = 'Unexpected error occured !';
   final String emptyFieldText = 'This field cannot be left blank !';
+  final String nullField = '';
 }
