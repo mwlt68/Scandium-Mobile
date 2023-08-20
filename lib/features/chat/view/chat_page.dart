@@ -4,8 +4,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scandium/features/chat/bloc/chat_bloc.dart';
 import 'package:scandium/features/chat/view/own_message_card.dart';
 import 'package:scandium/product/constants/application_constants.dart';
+import 'package:scandium/product/models/response/conversation_reponse_model.dart';
+import 'package:scandium/product/models/response/user_response_model.dart';
 import 'package:scandium/product/repositories/message/message_repository.dart';
 import 'package:scandium/product/widgets/conditional_circular_progress.dart';
+import 'package:sticky_grouped_list/sticky_grouped_list.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({required this.otherUserId, super.key});
@@ -15,7 +18,8 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  final ScrollController _scrollController = ScrollController();
+  final GroupedItemScrollController _scrollController =
+      GroupedItemScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -209,10 +213,6 @@ class _ChatPageState extends State<ChatPage> {
           ),
           onPressed: () {
             if (state.content.isNotEmpty) {
-              _scrollController.animateTo(
-                  _scrollController.position.maxScrollExtent,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeOut);
               context.read<ChatBloc>().add(SendMessageEvent(state.content));
             }
           },
@@ -270,7 +270,9 @@ class _ChatPageState extends State<ChatPage> {
           ),
           IconButton(
             icon: const Icon(Icons.camera_alt),
-            onPressed: () {},
+            onPressed: () {
+              _scrollController.jumpTo(index: 15);
+            },
           ),
         ],
       ),
@@ -279,24 +281,72 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Expanded _bodyMessages(ChatState state) {
-    return Expanded(
-      child: ListView.builder(
-        shrinkWrap: true,
-        controller: _scrollController,
-        itemCount: state.messages.length + 1,
-        itemBuilder: (context, index) {
-          if (index == state.messages.length) {
-            return Container(
-              height: 70,
-            );
-          }
-          return OwnMessageCard(
-              message: state.messages[index],
-              isOwnCard: state.messages[index]
-                  .senderIsCurrentUser(state.currentUser!.id!));
-        },
+    var messageCount = state.messages.length;
+    var model = Expanded(
+      child: StickyGroupedListView<ConversationMessageModel, DateTime>(
+        elements: state.messages,
+        order: StickyGroupedListOrder.ASC,
+        groupBy: (ConversationMessageModel element) => DateTime(
+          element.createdAt!.year,
+          element.createdAt!.month,
+          element.createdAt!.day,
+        ),
+        groupComparator: (DateTime value1, DateTime value2) =>
+            value1.compareTo(value2),
+        itemComparator: (ConversationMessageModel element1,
+                ConversationMessageModel element2) =>
+            element1.createdAt!.compareTo(element2.createdAt!),
+        floatingHeader: false,
+        groupSeparatorBuilder: _bodyMessagesGroupSeparator,
+        indexedItemBuilder: (context, element, index) => _bodyMessagesItem(
+            element, index, state.messages.length, state.currentUser!),
+        itemScrollController: _scrollController,
       ),
     );
+    jumpToEnd(messageCount, state.content);
+    return model;
+  }
+
+  // This func for  initialScrollIndex error of StickyGroupedListView
+  void jumpToEnd(int messageCount, String content) {
+    if (messageCount > 0 && content.isEmpty) {
+      Future.delayed(const Duration(milliseconds: 150), () {
+        _scrollController.jumpTo(index: messageCount);
+      });
+    }
+  }
+
+  Widget _bodyMessagesGroupSeparator(ConversationMessageModel element) {
+    return SizedBox(
+      height: 40,
+      child: Align(
+        alignment: Alignment.center,
+        child: Container(
+          width: 120,
+          decoration: BoxDecoration(
+            color: Colors.blue[300],
+            border: Border.all(
+              color: Colors.blue[300]!,
+            ),
+            borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              '${element.createdAt!.day}/${element.createdAt!.month}/${element.createdAt!.year}',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _bodyMessagesItem(ConversationMessageModel element, int index,
+      int messagesLength, UserResponseModel currentUser) {
+    return OwnMessageCard(
+        message: element,
+        isOwnCard: element.senderIsCurrentUser(currentUser.id!));
   }
 
   Widget bottomSheet() {

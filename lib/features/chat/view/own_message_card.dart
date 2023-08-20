@@ -43,7 +43,7 @@ class OwnMessageCard extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      message?.createdAt?.getFormatted() ??
+                      message?.createdAt?.getTime ??
                           ApplicationConstants.instance.nullField,
                       style: TextStyle(
                         fontSize: textSize,

@@ -17,7 +17,9 @@ extension DateHelpers on DateTime {
 
   String getFormatted() {
     return isToday()
-        ? DateFormat.yMd().format(this)
-        : DateFormat.Hm().format(this);
+        ? DateFormat.Hm().format(this)
+        : DateFormat.yMd().format(this);
   }
+
+  String get getTime => DateFormat.Hm().format(this);
 }
