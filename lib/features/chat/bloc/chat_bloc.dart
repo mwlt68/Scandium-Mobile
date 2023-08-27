@@ -16,10 +16,13 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<GetConversationEvent>(_onGetConversation);
     on<SendMessageEvent>(_onSendMessageEvent);
     on<ContentChangedEvent>(_onContentChangedEvent);
+    on<ReceiveMessageEvent>(_onReceiveMessageEvent);
   }
 
   final MessageRepository _messageRepository;
 
+  Future _onReceiveMessageEvent(
+      ReceiveMessageEvent event, Emitter<ChatState> emit) async {}
   Future _onGetConversation(
       GetConversationEvent event, Emitter<ChatState> emit) async {
     emit(state.copyWith(isLoading: true));

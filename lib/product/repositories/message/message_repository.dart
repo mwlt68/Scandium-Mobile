@@ -13,7 +13,8 @@ class _MessageApiPaths {
 }
 
 class MessageRepository {
-  late final INetworkManager _networkManager;
+  final INetworkManager _networkManager;
+
   MessageRepository(INetworkManager networkManager)
       : _networkManager = networkManager;
 
