@@ -19,12 +19,8 @@ class CustomCard extends StatelessWidget {
             userRepository: RepositoryProvider.of<UserRepository>(context)),
         child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
           builder: (context, state) {
-            if (state.user?.id != null &&
-                messageModel.sender?.id != null &&
-                messageModel.receiver?.id != null) {
-              var otherUserId = state.user!.id! == messageModel.sender?.id
-                  ? messageModel.receiver!.id!
-                  : messageModel.sender!.id!;
+            var otherUserId = messageModel.getOtherUserId(state.user?.id);
+            if (otherUserId != null) {
               return InkWell(
                 onTap: () {
                   Navigator.push(
@@ -53,7 +49,8 @@ class CustomCard extends StatelessWidget {
                         ),
                       ),
                       title: Text(
-                        messageModel.sender?.username ?? "Sender",
+                        messageModel.getOtherUserName(state.user?.id) ??
+                            "Sender",
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
