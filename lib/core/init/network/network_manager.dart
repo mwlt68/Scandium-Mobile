@@ -1,12 +1,14 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
-import 'package:flutter/foundation.dart';
 import 'package:scandium/core/base/models/mappable.dart';
 import 'package:scandium/core/base/models/base_response_model.dart';
 import 'package:scandium/core/init/network/network_response_model.dart';
+import 'package:scandium/core/init/network/tokenable.dart';
 
 abstract class INetworkManager {
+  abstract String baseUrl;
+
   Future<NetworkResponseModel<BR, Res>> post<BR extends BaseResponseModel<Res>,
       Res extends IFromMappable, Req extends IToMappable>(
     Res res,
@@ -31,23 +33,21 @@ abstract class INetworkManager {
   });
 }
 
-abstract class NetworkManager extends INetworkManager {
-  NetworkManager({required this.baseOptions}) {
-    _dio = Dio(baseOptions);
-    if (!kIsWeb) {
-      (_dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate =
-          (HttpClient dioClient) {
-        dioClient.badCertificateCallback =
-            ((X509Certificate cert, String host, int port) => true);
-        return dioClient;
-      };
-    }
+abstract class NetworkManager implements INetworkManager, ITokenable {
+  NetworkManager({required this.baseUrl}) {
+    _dio = Dio(BaseOptions(baseUrl: baseUrl));
+    (_dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate =
+        (HttpClient dioClient) {
+      dioClient.badCertificateCallback =
+          ((X509Certificate cert, String host, int port) => true);
+      return dioClient;
+    };
   }
 
-  final BaseOptions baseOptions;
   late Dio _dio;
 
-  Future<String> getToken();
+  @override
+  String baseUrl;
 
   Future<NetworkResponseModel<BR, Res>> request<
       BR extends BaseResponseModel<Res>,

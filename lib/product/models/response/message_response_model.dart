@@ -30,4 +30,23 @@ class MessageResponseModel implements IFromMappable {
           map['createDate'] != null ? DateTime.parse(map['createDate']) : null,
     );
   }
+
+  bool get isSenderAndReceiverIdNull =>
+      sender?.id == null || receiver?.id == null;
+
+  String? getOtherUserName(String? currentUserId) {
+    if (currentUserId != null && !isSenderAndReceiverIdNull) {
+      return currentUserId == sender?.id
+          ? receiver?.username
+          : sender?.username;
+    }
+    return null;
+  }
+
+  String? getOtherUserId(String? currentUserId) {
+    if (currentUserId != null && !isSenderAndReceiverIdNull) {
+      return currentUserId == sender?.id ? receiver?.id : sender?.id;
+    }
+    return null;
+  }
 }

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scandium/features/contact/contact_request/view/contact_request_page.dart';
-import 'package:scandium/features/contact/new_contact/view/new_contact_page.dart';
 import 'package:scandium/features/home/bloc/home_bloc.dart';
-import 'package:scandium/features/home/view/chat_page.dart';
+import 'package:scandium/features/home/view/chat_list_page.dart';
 import 'package:scandium/product/repositories/message/message_repository.dart';
 import 'package:scandium/product/repositories/user/user_repository.dart';
 
@@ -48,14 +46,11 @@ class _HomePageState extends State<HomePage>
         if (state is HomeLoadedState) {
           return TabBarView(
             controller: _controller,
-            children: [
-              const Text("CAMERA"),
-              ChatPage(
-                messageModels: state.messages,
-                sourceMessageModel: null,
-              ),
-              const Text("STATUS"),
-              const Text("CALLS"),
+            children: const [
+              Text("CAMERA"),
+              ChatListPage(),
+              Text("STATUS"),
+              Text("CALLS"),
             ],
           );
         } else if (state is HomeErrorState) {
