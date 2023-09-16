@@ -4,9 +4,11 @@ import 'package:dio/io.dart';
 import 'package:scandium/core/base/models/mappable.dart';
 import 'package:scandium/core/base/models/base_response_model.dart';
 import 'package:scandium/core/init/network/network_response_model.dart';
+import 'package:scandium/core/init/network/tokenable.dart';
 
 abstract class INetworkManager {
-  late String baseUrl;
+  abstract String baseUrl;
+
   Future<NetworkResponseModel<BR, Res>> post<BR extends BaseResponseModel<Res>,
       Res extends IFromMappable, Req extends IToMappable>(
     Res res,
@@ -31,8 +33,8 @@ abstract class INetworkManager {
   });
 }
 
-abstract class NetworkManager extends INetworkManager {
-  NetworkManager({required baseUrl}) {
+abstract class NetworkManager implements INetworkManager, ITokenable {
+  NetworkManager({required this.baseUrl}) {
     _dio = Dio(BaseOptions(baseUrl: baseUrl));
     (_dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate =
         (HttpClient dioClient) {
@@ -44,7 +46,8 @@ abstract class NetworkManager extends INetworkManager {
 
   late Dio _dio;
 
-  Future<String> getToken();
+  @override
+  String baseUrl;
 
   Future<NetworkResponseModel<BR, Res>> request<
       BR extends BaseResponseModel<Res>,
