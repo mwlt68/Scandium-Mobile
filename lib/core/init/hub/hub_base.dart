@@ -1,16 +1,16 @@
 import 'dart:io';
+import 'package:scandium/core/init/network/tokenable.dart';
 import 'package:signalr_netcore/signalr_client.dart';
 
 typedef OnHubError = void Function({Exception? error});
 typedef OnHubConnected = void Function({String? connectionId});
 
-abstract class HubBase {
+abstract class HubBase implements ITokenable {
   HubConnection? _hubConnection;
 
   final String baseUrl;
   final String hubName;
   final List<HubMethodRegisterModel>? _hubMethodRegisterModels;
-
   final OnHubError? _onclose;
   final OnHubError? _onreconnecting;
   final OnHubConnected? _onreconnected;
@@ -32,12 +32,16 @@ abstract class HubBase {
   Future<void> openChatConnection() async {
     if (_hubConnection == null) {
       final httpConnectionOptions = HttpConnectionOptions(
+          accessTokenFactory: () async {
+            return await getToken();
+          },
           httpClient: WebSupportingHttpClient(
-        null,
-        httpClientCreateCallback: (httpClient) {
-          HttpOverrides.global = _HttpOverrideCertificateVerificationInDev();
-        },
-      ));
+            null,
+            httpClientCreateCallback: (httpClient) {
+              HttpOverrides.global =
+                  _HttpOverrideCertificateVerificationInDev();
+            },
+          ));
       var url = baseUrl + hubName;
       _hubConnection = HubConnectionBuilder()
           .withUrl(url, options: httpConnectionOptions)
@@ -60,6 +64,10 @@ abstract class HubBase {
   Future<void> invoke(String methodName, {List<Object>? args}) async {
     await openChatConnection();
     _hubConnection!.invoke(methodName, args: args);
+  }
+
+  stop() {
+    _hubConnection?.stop();
   }
 
   OnClose get _getOnClose => _onclose ?? ({error}) => {};
