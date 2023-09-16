@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_guid/flutter_guid.dart';
 import 'package:scandium/core/extensions/list_extension.dart';
+import 'package:scandium/product/hub/message_hub.dart';
 import 'package:scandium/product/models/response/conversation_reponse_model.dart';
 import 'package:scandium/product/models/response/user_response_model.dart';
 import 'package:scandium/product/repositories/message/message_repository.dart';
@@ -17,12 +18,21 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<SendMessageEvent>(_onSendMessageEvent);
     on<ContentChangedEvent>(_onContentChangedEvent);
     on<ReceiveMessageEvent>(_onReceiveMessageEvent);
+    _messageHub =
+        MessageHub(receiveMessage: (a) => {add(ReceiveMessageEvent(a))});
+    _messageHub.openChatConnection();
   }
 
   final MessageRepository _messageRepository;
+  late MessageHub _messageHub;
 
   Future _onReceiveMessageEvent(
-      ReceiveMessageEvent event, Emitter<ChatState> emit) async {}
+      ReceiveMessageEvent event, Emitter<ChatState> emit) async {
+    var messages = List<ConversationMessageModel>.from(state.messages);
+    messages.add(event.conversationMessageModel);
+    emit(state.copyWith(messages: messages));
+  }
+
   Future _onGetConversation(
       GetConversationEvent event, Emitter<ChatState> emit) async {
     emit(state.copyWith(isLoading: true));

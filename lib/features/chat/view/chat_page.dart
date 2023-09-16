@@ -4,8 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scandium/features/chat/bloc/chat_bloc.dart';
 import 'package:scandium/features/chat/view/own_message_card.dart';
 import 'package:scandium/product/constants/application_constants.dart';
-import 'package:scandium/product/helpers/network_helper.dart';
-import 'package:scandium/product/hubs/message_hub.dart';
 import 'package:scandium/product/models/response/conversation_reponse_model.dart';
 import 'package:scandium/product/models/response/user_response_model.dart';
 import 'package:scandium/product/repositories/message/message_repository.dart';
@@ -22,20 +20,6 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final GroupedItemScrollController _scrollController =
       GroupedItemScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    var _messageHub = MessageHub(
-        baseUrl: NetworkHelper.getBaseUrl,
-        receiveMessage: receiveMessageHandler);
-    _messageHub.openChatConnection();
-  }
-
-  void receiveMessageHandler(String? message) {
-    print("Message: " + (message ?? ''));
-    context.read<ChatBloc>().add(ReceiveMessageEvent(message));
-  }
 
   @override
   Widget build(BuildContext context) {
