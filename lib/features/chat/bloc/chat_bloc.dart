@@ -4,6 +4,7 @@ import 'package:flutter_guid/flutter_guid.dart';
 import 'package:scandium/core/extensions/list_extension.dart';
 import 'package:scandium/product/hub/message_hub.dart';
 import 'package:scandium/product/models/response/conversation_reponse_model.dart';
+import 'package:scandium/product/models/response/message_response_model.dart';
 import 'package:scandium/product/models/response/user_response_model.dart';
 import 'package:scandium/product/repositories/message/message_repository.dart';
 
@@ -17,19 +18,28 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<GetConversationEvent>(_onGetConversation);
     on<SendMessageEvent>(_onSendMessageEvent);
     on<ContentChangedEvent>(_onContentChangedEvent);
-    on<ReceiveMessageEvent>(_onReceiveMessageEvent);
-    _messageHub =
-        MessageHub(receiveMessage: (a) => {add(ReceiveMessageEvent(a))});
+    on<MessageReceiveEvent>(_onMessageReceiveEvent);
+    _messageHub = MessageHub(
+        messageReceive: (messageResponse) =>
+            {add(MessageReceiveEvent(messageResponse))});
     _messageHub.openChatConnection();
   }
 
   final MessageRepository _messageRepository;
   late MessageHub _messageHub;
 
-  Future _onReceiveMessageEvent(
-      ReceiveMessageEvent event, Emitter<ChatState> emit) async {
+  Future _onMessageReceiveEvent(
+      MessageReceiveEvent event, Emitter<ChatState> emit) async {
     var messages = List<ConversationMessageModel>.from(state.messages);
-    messages.add(event.conversationMessageModel);
+    var messageRes = event.messageResponse;
+    var messageModel = ConversationMessageModel(
+        id: messageRes.id,
+        content: messageRes.content,
+        createdAt: messageRes.createDate,
+        didTransmit: messageRes.didTransmit,
+        receiverId: messageRes.receiver?.id,
+        senderId: messageRes.sender?.id);
+    messages.add(messageModel);
     emit(state.copyWith(messages: messages));
   }
 
