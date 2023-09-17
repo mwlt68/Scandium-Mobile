@@ -33,10 +33,10 @@ class ContentChangedEvent extends ChatEvent {
   List<Object?> get props => [content];
 }
 
-class ReceiveMessageEvent extends ChatEvent {
-  final ConversationMessageModel conversationMessageModel;
-  const ReceiveMessageEvent(this.conversationMessageModel);
+class MessageReceiveEvent extends ChatEvent {
+  final MessageResponseModel messageResponse;
+  const MessageReceiveEvent(this.messageResponse);
 
   @override
-  List<Object?> get props => [conversationMessageModel];
+  List<Object?> get props => [messageResponse];
 }

@@ -1,38 +1,38 @@
 import 'package:scandium/core/init/hub/hub_base.dart';
 import 'package:scandium/product/helpers/network_helper.dart';
 import 'package:scandium/product/hub/product_hub_base.dart';
-import 'package:scandium/product/models/response/conversation_reponse_model.dart';
+import 'package:scandium/product/models/response/message_response_model.dart';
 
-typedef ReceiveMessage = void Function(ConversationMessageModel message);
+typedef MessageReceive = void Function(MessageResponseModel message);
 
 class MessageHub extends ProductHubBase {
   static const String _hubName = "hubs/messageHub",
-      _receiveMessageName = "ReceiveMessage";
+      _messageReceiveName = "ReceiveMessage";
 
-  MessageHub({required this.receiveMessage})
+  MessageHub({required this.messageReceive})
       : super(
             baseUrl: NetworkHelper.getBaseUrl,
             hubName: _hubName,
             hubMethodRegisterModels:
-                _getHubMethodRegisterModels(receiveMessage));
+                _getHubMethodRegisterModels(messageReceive));
 
   static List<HubMethodRegisterModel> _getHubMethodRegisterModels(
-      ReceiveMessage? receiveMessage) {
+      MessageReceive? messageReceive) {
     return List<HubMethodRegisterModel>.filled(
         1,
         HubMethodRegisterModel(
-            methodName: _receiveMessageName,
+            methodName: _messageReceiveName,
             newMethod: (List<Object?>? args) {
-              if (receiveMessage != null && args?[0] != null) {
-                var model = ConversationMessageModel()
+              if (messageReceive != null && args?[0] != null) {
+                var model = MessageResponseModel()
                     .fromMap(args![0] as Map<String, dynamic>);
-                receiveMessage(model);
+                messageReceive(model);
               }
             }),
         growable: false);
   }
 
-  final ReceiveMessage receiveMessage;
+  final MessageReceive messageReceive;
 
   /*
   
