@@ -1,7 +1,7 @@
-typedef FirstWhereClosure = bool Function(dynamic);
+typedef FirstWhereClosure<T> = bool Function(T);
 
-extension FirstWhere on List {
-  dynamic firstOrDefault(FirstWhereClosure closure) {
+extension FirstWhere<T> on List<T> {
+  T? firstOrDefault(FirstWhereClosure<T> closure) {
     int index = indexWhere(closure);
 
     if (index != -1) {
