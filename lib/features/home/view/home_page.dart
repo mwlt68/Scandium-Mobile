@@ -43,7 +43,11 @@ class _HomePageState extends State<HomePage>
   Widget _scaffoldBody(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
-        if (state is HomeLoadedState) {
+        if (state.isLoading) {
+          return const CircularProgressIndicator();
+        } else if (state.error != null) {
+          return Text(state.error ?? 'Unknown error !');
+        } else {
           return TabBarView(
             controller: _controller,
             children: const [
@@ -53,10 +57,6 @@ class _HomePageState extends State<HomePage>
               Text("CALLS"),
             ],
           );
-        } else if (state is HomeErrorState) {
-          return Text(state.error ?? 'Unknown error !');
-        } else {
-          return const CircularProgressIndicator();
         }
       },
     );

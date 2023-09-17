@@ -1,28 +1,25 @@
 part of 'home_bloc.dart';
 
 class HomeState extends Equatable {
-  const HomeState();
-
-  @override
-  List<Object?> get props => [];
-}
-
-class HomeLoadedState extends HomeState {
-  const HomeLoadedState({required this.messages});
-  final List<MessageResponseModel> messages;
-}
-
-class HomeLoading extends HomeState {
-  const HomeLoading();
-  @override
-  List<Object> get props => [];
-}
-
-class HomeErrorState extends HomeState {
-  const HomeErrorState(this.error);
-
   final String? error;
+  final bool isLoading;
+  late List<MessageResponseModel> messages;
+
+  HomeState(
+      {List<MessageResponseModel>? messages,
+      this.isLoading = false,
+      this.error}) {
+    this.messages = messages ?? List.empty();
+  }
+
+  HomeState copyWith(
+      {List<MessageResponseModel>? messages, bool? isLoading, String? error}) {
+    return HomeState(
+        messages: messages ?? this.messages,
+        isLoading: isLoading ?? this.isLoading,
+        error: error ?? this.error);
+  }
 
   @override
-  List<Object?> get props => [error];
+  List<Object?> get props => [error, isLoading, messages];
 }

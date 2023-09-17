@@ -10,6 +10,12 @@ class LogOutSubmitted extends HomeEvent {
   const LogOutSubmitted();
 }
 
-class LoadHomeEvent extends HomeEvent {
-  List<Object> get props => [];
+class LoadHomeEvent extends HomeEvent {}
+
+class MessageReceiveEvent extends HomeEvent {
+  final MessageResponseModel messageResponse;
+  const MessageReceiveEvent(this.messageResponse);
+
+  @override
+  List<Object> get props => [messageResponse];
 }
