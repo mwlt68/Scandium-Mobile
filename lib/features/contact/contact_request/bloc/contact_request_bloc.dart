@@ -24,7 +24,7 @@ class ContactRequestBloc
     Emitter<ContactRequestState> emit,
   ) async {
     emit(state.copyWith(isLoading: true));
-    var result = await _friendshipRequestRepository.getRequests();
+    var result = await _friendshipRequestRepository.getAll();
     if (result == null) {
       emit(state.copyWith(
           errorMessage:

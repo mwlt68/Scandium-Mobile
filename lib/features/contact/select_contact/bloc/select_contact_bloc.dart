@@ -40,7 +40,8 @@ class SelectContactBloc extends Bloc<SelectContactEvent, SelectContactState> {
     Emitter<SelectContactState> emit,
   ) async {
     emit(state.copyWith(isLoading: true));
-    var result = await _friendshipRequestRepository.allAccepted();
+    var result =
+        await _friendshipRequestRepository.getAll(isOnlyAccepted: true);
     if (result == null) {
       emit(state.copyWith(
           errorMessage:

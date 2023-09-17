@@ -6,10 +6,8 @@ import 'package:scandium/product/repositories/friendship_request/follow_request_
 import '../../../core/base/models/base_response_model.dart';
 
 class _FriendshipRequestApiPaths {
-  static const String getRequests = "friendship/request";
-  static const String follow = "friendship/insert";
   static const String approve = "friendship/approve";
-  static const String allAccepted = "friendship/all";
+  static const String controller = "friendship";
 }
 
 class FriendshipRequestRepository {
@@ -17,13 +15,14 @@ class FriendshipRequestRepository {
   FriendshipRequestRepository(INetworkManager networkManager)
       : _networkManager = networkManager;
 
-  Future<ListBaseResponseModel<FriendshipResponseModel>?> getRequests() async {
+  Future<ListBaseResponseModel<FriendshipResponseModel>?> getAll(
+      {bool isOnlyAccepted = false}) async {
+    var queryParameters = {'isOnlyAccepted': isOnlyAccepted};
     final response = await _networkManager.get<
-        ListBaseResponseModel<FriendshipResponseModel>,
-        FriendshipResponseModel>(
-      FriendshipResponseModel(),
-      _FriendshipRequestApiPaths.getRequests,
-    );
+            ListBaseResponseModel<FriendshipResponseModel>,
+            FriendshipResponseModel>(
+        FriendshipResponseModel(), _FriendshipRequestApiPaths.controller,
+        queryParameters: queryParameters);
     return response.model;
   }
 
@@ -33,7 +32,7 @@ class FriendshipRequestRepository {
             SingleBaseResponseModel<FriendshipResponseModel>,
             FriendshipResponseModel,
             FollowRequestModel>(
-        FriendshipResponseModel(), _FriendshipRequestApiPaths.follow,
+        FriendshipResponseModel(), _FriendshipRequestApiPaths.controller,
         data: FollowRequestModel(receiverId: receiverId));
     return response.model;
   }
@@ -46,14 +45,6 @@ class FriendshipRequestRepository {
             ApproveRequestModel>(
         FriendshipResponseModel(), _FriendshipRequestApiPaths.approve,
         data: ApproveRequestModel(senderId: senderId));
-    return response.model;
-  }
-
-  Future<ListBaseResponseModel<FriendshipResponseModel>?> allAccepted() async {
-    final response = await _networkManager.get<
-            ListBaseResponseModel<FriendshipResponseModel>,
-            FriendshipResponseModel>(
-        FriendshipResponseModel(), _FriendshipRequestApiPaths.allAccepted);
     return response.model;
   }
 }
