@@ -117,18 +117,25 @@ class _SelectContactPageState extends State<SelectContactPage> {
             size: 26,
           ),
           onPressed: () {}),
-      IconButton(
-          icon: const Icon(
-            Icons.follow_the_signs,
-            size: 26,
-          ),
-          onPressed: _followRequestsButtonOnPressed),
+      BlocBuilder<SelectContactBloc, SelectContactState>(
+        builder: (context, state) {
+          return IconButton(
+              icon: const Icon(
+                Icons.follow_the_signs,
+                size: 26,
+              ),
+              onPressed: () => _followRequestsButtonOnPressed(context));
+        },
+      ),
     ];
   }
 
-  _followRequestsButtonOnPressed() async {
+  _followRequestsButtonOnPressed(BuildContext context) async {
     Navigator.push(context,
-        MaterialPageRoute(builder: (builder) => const ContactRequestPage()));
+            MaterialPageRoute(builder: (builder) => const ContactRequestPage()))
+        .then((value) {
+      context.read<SelectContactBloc>().add(GetContactsEvent());
+    });
   }
 
   InkWell _newContactCard(BuildContext context) {
@@ -139,7 +146,10 @@ class _SelectContactPageState extends State<SelectContactPage> {
       ),
       onTap: () {
         Navigator.push(context,
-            MaterialPageRoute(builder: (builder) => const NewContactPage()));
+                MaterialPageRoute(builder: (builder) => const NewContactPage()))
+            .then((value) {
+          context.read<SelectContactBloc>().add(GetContactsEvent());
+        });
       },
     );
   }
