@@ -1,27 +1,23 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:scandium/features/chat/view/chat_page.dart';
 import 'package:scandium/product/models/base/selectable_model.dart';
 import 'package:scandium/product/models/response/user_response_model.dart';
 
 class ContactCard extends StatelessWidget {
   const ContactCard(
-      {Key? key, required this.contact, this.contactCardListTileTrailing})
+      {Key? key,
+      required this.contact,
+      this.contactCardListTileTrailing,
+      this.onTap})
       : super(key: key);
   final SelectableModel<UserResponseModel> contact;
   final ContactCardListTileTrailing? contactCardListTileTrailing;
+  final void Function()? onTap;
   @override
   Widget build(BuildContext context) {
     return ListTile(
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (builder) => ChatPage(
-                        otherUserId: contact.model!.id!,
-                      )));
-        },
+        onTap: onTap,
         leading: SizedBox(
           width: 50,
           height: 53,
@@ -69,9 +65,22 @@ class ContactCard extends StatelessWidget {
           ),
         ),
         trailing: contactCardListTileTrailing != null
-            ? TextButton(
-                onPressed: contactCardListTileTrailing!.onPressed,
-                child: Text(contactCardListTileTrailing!.buttonText),
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    child: TextButton(
+                      onPressed: contactCardListTileTrailing!.onPressed,
+                      style: TextButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.teal,
+                          shape: const BeveledRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)))),
+                      child: Text(contactCardListTileTrailing!.buttonText),
+                    ),
+                  ),
+                ],
               )
             : null);
   }
