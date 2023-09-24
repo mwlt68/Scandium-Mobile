@@ -5,7 +5,7 @@ class SelectContactState extends Equatable {
       {this.users, this.isLoading = false, this.errorMessage});
 
   @override
-  List<Object?> get props => [isLoading, errorMessage];
+  List<Object?> get props => [isLoading, errorMessage, users];
 
   final List<UserResponseModel>? users;
   final bool? isLoading;
