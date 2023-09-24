@@ -13,7 +13,7 @@ class NewContactState extends Equatable {
       [searcResultUsers, searchValue, isLoading, errorMessage];
 
   final String? searchValue;
-  final List<UserResponseModel>? searcResultUsers;
+  final List<UserSearchResponseModel>? searcResultUsers;
   final bool? isLoading;
   final String? errorMessage;
   final String? successMessage;
@@ -21,7 +21,7 @@ class NewContactState extends Equatable {
   NewContactState copyWith(
       {String? searchValue,
       bool? isLoading,
-      List<UserResponseModel>? searcResultUsers,
+      List<UserSearchResponseModel>? searcResultUsers,
       String? errorMessage,
       String? successMessage}) {
     return NewContactState(
