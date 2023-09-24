@@ -28,7 +28,7 @@ class _ContactRequestPageState extends State<ContactRequestPage> {
         create: (context) => ContactRequestBloc(
             friendshipRequestRepository:
                 RepositoryProvider.of<FriendshipRequestRepository>(context))
-          ..add(const GetRequests()),
+          ..add(const GetRequestsEvent()),
         child: _blocListener());
   }
 
@@ -60,29 +60,37 @@ class _ContactRequestPageState extends State<ContactRequestPage> {
       builder: (context, state) {
         return ConditionalCircularProgress(
           isLoading: state.isLoading,
-          hasMessage:
-              state.requestedUsers == null || state.requestedUsers!.isEmpty,
+          hasMessage: state.friendshipResponses == null ||
+              state.friendshipResponses!.isEmpty,
           message: 'You have no friend requests',
           child: _blocBuilderChild(state),
         );
       },
-      buildWhen: (previous, current) => previous.isLoading != current.isLoading,
+      buildWhen: (previous, current) =>
+          previous.isLoading != current.isLoading ||
+          previous.friendshipResponses != current.friendshipResponses,
     );
   }
 
   ListView _blocBuilderChild(ContactRequestState state) {
     return ListView.builder(
-        itemCount: state.requestedUsers!.length,
+        itemCount: state.friendshipResponses!.length,
         itemBuilder: (context, index) {
           return ContactCard(
-            contact: SelectableModel(model: state.requestedUsers![index]),
+            contact: SelectableModel(
+                model: state.friendshipResponses![index].sender),
             contactCardListTileTrailing: ContactCardListTileTrailing(
-              buttonText: "Approve",
-              onPressed: () {
-                context.read<ContactRequestBloc>().add(
-                      RequestApproved(state.requestedUsers![index].id!),
-                    );
-              },
+              buttonText: state.friendshipResponses![index].isApproved!
+                  ? "Following"
+                  : "Approve",
+              onPressed: state.friendshipResponses![index].isApproved!
+                  ? null
+                  : () {
+                      context.read<ContactRequestBloc>().add(
+                            RequestApproveEvent(
+                                state.friendshipResponses![index].id!),
+                          );
+                    },
             ),
           );
         });

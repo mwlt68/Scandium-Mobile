@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:scandium/core/extensions/list_extension.dart';
 import 'package:scandium/product/constants/application_constants.dart';
-import 'package:scandium/product/models/response/user_response_model.dart';
+import 'package:scandium/product/models/response/user_search_response_model.dart';
 import 'package:scandium/product/repositories/friendship_request/friendship_request_repository.dart';
 import 'package:scandium/product/repositories/user/user_repository.dart';
 
@@ -47,23 +48,31 @@ class NewContactBloc extends Bloc<NewContactEvent, NewContactState> {
     FollowSubmitted event,
     Emitter<NewContactState> emit,
   ) async {
-    emit(state.copyWith(isLoading: true));
-    var result = await _friendshipRequestRepository.follow(event.userId);
-    if (result == null) {
-      emit(state.copyWith(
-          errorMessage:
-              ApplicationConstants.instance.unexpectedErrorDefaultMessage,
-          isLoading: false));
-    } else if (result.value != null && result.hasNotError) {
-      state.searcResultUsers!.removeWhere((x) => x.id == event.userId);
-      String? username = result.value?.receiver?.username;
-      String successMessage = 'Follow request sent to $username';
-      emit(state.copyWith(
-          searcResultUsers: state.searcResultUsers,
-          isLoading: false,
-          successMessage: successMessage));
-    } else {
-      emit(state.copyWith(errorMessage: result.errorMessage, isLoading: false));
+    var otherUserFriendship = state.searcResultUsers
+        .firstOrDefault((p0) => p0.receiverId == event.userId);
+    if (otherUserFriendship == null) {
+      emit(state.copyWith(isLoading: true));
+      var result = await _friendshipRequestRepository.follow(event.userId);
+      if (result == null) {
+        emit(state.copyWith(
+            errorMessage:
+                ApplicationConstants.instance.unexpectedErrorDefaultMessage,
+            isLoading: false));
+      } else if (result.value != null && result.hasNotError) {
+        var searcResultUsers = List<UserSearchResponseModel>.from(
+            state.searcResultUsers ?? List.empty(growable: true));
+        var searcResultUser = searcResultUsers.firstOrDefault(
+            (p) => p.userResponseDto?.id == result.value?.receiver?.id);
+        if (searcResultUser != null) {
+          searcResultUser.friendshipRequestStatus =
+              FriendshipRequestStatus.Requested;
+        }
+        emit(state.copyWith(
+            searcResultUsers: searcResultUsers, isLoading: false));
+      } else {
+        emit(state.copyWith(
+            errorMessage: result.errorMessage, isLoading: false));
+      }
     }
   }
 }

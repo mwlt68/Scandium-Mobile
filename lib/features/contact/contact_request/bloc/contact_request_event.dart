@@ -7,13 +7,21 @@ abstract class ContactRequestEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class RequestApproved extends ContactRequestEvent {
-  const RequestApproved(this.userId);
-  final String userId;
-  List<Object> get props => [userId];
+class RequestApproveEvent extends ContactRequestEvent {
+  const RequestApproveEvent(this.friendshipRequestId);
+  final String friendshipRequestId;
+  List<Object> get props => [friendshipRequestId];
 }
 
-class GetRequests extends ContactRequestEvent {
-  const GetRequests();
+class GetRequestsEvent extends ContactRequestEvent {
+  const GetRequestsEvent();
   List<Object> get props => [];
+}
+
+class NewFriendshipRequestEvent extends ContactRequestEvent {
+  final FriendshipResponseModel model;
+  const NewFriendshipRequestEvent(this.model);
+
+  @override
+  List<Object> get props => [model];
 }

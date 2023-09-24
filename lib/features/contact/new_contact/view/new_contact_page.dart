@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scandium/features/contact/new_contact/bloc/new_contact_bloc.dart';
 import 'package:scandium/product/models/base/selectable_model.dart';
+import 'package:scandium/product/models/response/user_search_response_model.dart';
 import 'package:scandium/product/repositories/friendship_request/friendship_request_repository.dart';
 import 'package:scandium/product/repositories/user/user_repository.dart';
 import 'package:scandium/product/widgets/conditional_circular_progress.dart';
@@ -59,15 +60,21 @@ class _NewContactPageState extends State<NewContactPage> {
               itemCount: state.searcResultUsers!.length,
               itemBuilder: (context, index) {
                 return ContactCard(
-                  contact:
-                      SelectableModel(model: state.searcResultUsers![index]),
+                  contact: SelectableModel(
+                      model: state.searcResultUsers![index].userResponseDto),
                   contactCardListTileTrailing: ContactCardListTileTrailing(
-                    buttonText: "Follow",
-                    onPressed: () {
-                      context.read<NewContactBloc>().add(
-                            FollowSubmitted(state.searcResultUsers![index].id!),
-                          );
-                    },
+                    buttonText: state
+                        .searcResultUsers![index].friendshipRequestStatus!.name,
+                    onPressed: state.searcResultUsers![index]
+                                .friendshipRequestStatus ==
+                            FriendshipRequestStatus.Follow
+                        ? () {
+                            context.read<NewContactBloc>().add(
+                                  FollowSubmitted(state.searcResultUsers![index]
+                                      .userResponseDto!.id!),
+                                );
+                          }
+                        : null,
                   ),
                 );
               }),

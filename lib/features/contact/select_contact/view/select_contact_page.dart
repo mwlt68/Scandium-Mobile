@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scandium/features/chat/view/chat_page.dart';
 import 'package:scandium/features/contact/new_contact/view/new_contact_page.dart';
 import 'package:scandium/features/contact/select_contact/bloc/select_contact_bloc.dart';
 import 'package:scandium/product/models/base/selectable_model.dart';
@@ -55,13 +56,24 @@ class _SelectContactPageState extends State<SelectContactPage> {
                 } else if (index == 1) {
                   return _newContactCard(context);
                 }
-                return ContactCard(
-                  contact: SelectableModel(model: state.users![index - 2]),
-                );
+                return _listViewContactCard(state, index, context);
               }),
         );
       },
     );
+  }
+
+  ContactCard _listViewContactCard(
+      SelectContactState state, int index, BuildContext context) {
+    return ContactCard(
+        contact: SelectableModel(model: state.users![index - 2]),
+        onTap: () async {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (builder) =>
+                      ChatPage(otherUserId: state.users![index - 2].id!)));
+        });
   }
 
   AppBar _appBar(BuildContext context) {
@@ -105,18 +117,25 @@ class _SelectContactPageState extends State<SelectContactPage> {
             size: 26,
           ),
           onPressed: () {}),
-      IconButton(
-          icon: const Icon(
-            Icons.follow_the_signs,
-            size: 26,
-          ),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (builder) => const ContactRequestPage()));
-          }),
+      BlocBuilder<SelectContactBloc, SelectContactState>(
+        builder: (context, state) {
+          return IconButton(
+              icon: const Icon(
+                Icons.follow_the_signs,
+                size: 26,
+              ),
+              onPressed: () => _followRequestsButtonOnPressed(context));
+        },
+      ),
     ];
+  }
+
+  _followRequestsButtonOnPressed(BuildContext context) async {
+    Navigator.push(context,
+            MaterialPageRoute(builder: (builder) => const ContactRequestPage()))
+        .then((value) {
+      context.read<SelectContactBloc>().add(GetContactsEvent());
+    });
   }
 
   InkWell _newContactCard(BuildContext context) {
@@ -127,7 +146,10 @@ class _SelectContactPageState extends State<SelectContactPage> {
       ),
       onTap: () {
         Navigator.push(context,
-            MaterialPageRoute(builder: (builder) => const NewContactPage()));
+                MaterialPageRoute(builder: (builder) => const NewContactPage()))
+            .then((value) {
+          context.read<SelectContactBloc>().add(GetContactsEvent());
+        });
       },
     );
   }
