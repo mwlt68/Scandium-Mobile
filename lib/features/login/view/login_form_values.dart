@@ -7,7 +7,7 @@ class _LoginFormValues {
   final String passwordInputKey = 'loginForm_passwordInput_textField';
   final String passwordLabelText = 'Password';
   final String passwordErrorText = 'Password invalid';
-  final String registerPageButtonText = 'Register Page';
+  final String registerPageButtonText = 'Register';
   final String loginButtonText = 'Login';
   final String registerInfoText = 'Do not have an account ?';
 }
