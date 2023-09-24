@@ -5,10 +5,10 @@ import 'package:scandium/features/login/bloc/login_bloc.dart';
 import 'package:scandium/features/register/view/register_page.dart';
 import 'package:scandium/product/constants/application_constants.dart';
 import 'package:scandium/product/widgets/conditional_circular_progress.dart';
+part 'login_form_values.dart';
 
 class LoginForm extends StatelessWidget {
   const LoginForm({super.key});
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginBloc, LoginState>(
@@ -31,7 +31,7 @@ class LoginForm extends StatelessWidget {
             const Padding(padding: EdgeInsets.all(12)),
             _PasswordInput(),
             const Padding(padding: EdgeInsets.all(12)),
-            _LoginButton(),
+            _LoginOrRegister(),
           ],
         ),
       ),
@@ -40,17 +40,19 @@ class LoginForm extends StatelessWidget {
 }
 
 class _UsernameInput extends StatelessWidget {
+  final _LoginFormValues _values = _LoginFormValues();
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
       builder: (context, state) {
         return TextField(
-          key: const Key('loginForm_usernameInput_textField'),
+          key: Key(_values.usernameInputKey),
           onChanged: (username) =>
               context.read<LoginBloc>().add(LoginUsernameChanged(username)),
           decoration: InputDecoration(
-              labelText: 'Username',
-              errorText: state.username.invalid ? 'username invalid' : null),
+              labelText: _values.usernameLabelText,
+              errorText:
+                  state.username.invalid ? _values.usernameErrorText : null),
         );
       },
       buildWhen: (previous, current) => previous.username != current.username,
@@ -59,17 +61,21 @@ class _UsernameInput extends StatelessWidget {
 }
 
 class _PasswordInput extends StatelessWidget {
+  final _LoginFormValues _values = _LoginFormValues();
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
       builder: (context, state) {
         return TextField(
-          key: const Key('loginForm_passwordInput_textField'),
+          key: Key(_values.passwordInputKey),
           onChanged: (password) =>
               context.read<LoginBloc>().add(LoginPasswordChanged(password)),
           decoration: InputDecoration(
-              labelText: 'Password',
-              errorText: state.username.invalid ? 'password invalid' : null),
+              labelText: _values.passwordLabelText,
+              errorText:
+                  state.username.invalid ? _values.passwordErrorText : null),
+          obscureText: true,
         );
       },
       buildWhen: (previous, current) => previous.password != current.password,
@@ -77,7 +83,9 @@ class _PasswordInput extends StatelessWidget {
   }
 }
 
-class _LoginButton extends StatelessWidget {
+class _LoginOrRegister extends StatelessWidget {
+  final _LoginFormValues _values = _LoginFormValues();
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
@@ -85,27 +93,39 @@ class _LoginButton extends StatelessWidget {
       builder: (context, state) {
         return ConditionalCircularProgress(
             isLoading: state.status.isSubmissionInProgress,
-            child: Row(
+            child: Column(
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => RegisterPage()),
-                        (route) => false);
-                  },
-                  child: const Text('Register Page'),
-                ),
-                ElevatedButton(
-                  onPressed: state.status.isValidated
-                      ? () {
-                          context.read<LoginBloc>().add(const LoginSubmitted());
-                        }
-                      : null,
-                  child: const Text('Login'),
-                ),
+                _loginButton(state, context),
+                _registerRow(context),
               ],
             ));
       },
+    );
+  }
+
+  Row _registerRow(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [Text(_values.registerInfoText), _registerButton(context)],
+    );
+  }
+
+  TextButton _registerButton(BuildContext context) {
+    return TextButton(
+        onPressed: () {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const RegisterPage()),
+              (route) => false);
+        },
+        child: Text(_values.registerPageButtonText));
+  }
+
+  ElevatedButton _loginButton(LoginState state, BuildContext context) {
+    return ElevatedButton(
+      onPressed: state.status.isValidated
+          ? () => context.read<LoginBloc>().add(const LoginSubmitted())
+          : null,
+      child: Text(_values.loginButtonText),
     );
   }
 }
