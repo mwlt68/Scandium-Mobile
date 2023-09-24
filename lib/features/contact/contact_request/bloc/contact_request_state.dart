@@ -2,28 +2,27 @@ part of 'contact_request_bloc.dart';
 
 class ContactRequestState extends Equatable {
   const ContactRequestState(
-      {this.requestedUsers,
+      {this.friendshipResponses,
       this.isLoading = false,
       this.errorMessage,
       this.successMessage});
 
   @override
-  List<Object?> get props => [requestedUsers, isLoading, errorMessage];
+  List<Object?> get props => [friendshipResponses, isLoading, errorMessage];
 
-  final List<UserResponseModel>? requestedUsers;
+  final List<FriendshipResponseModel>? friendshipResponses;
   final bool? isLoading;
   final String? errorMessage;
   final String? successMessage;
 
   ContactRequestState copyWith(
-      {String? searchValue,
-      bool? isLoading,
-      List<UserResponseModel>? requestedUsers,
+      {bool? isLoading,
+      List<FriendshipResponseModel>? friendshipResponses,
       String? errorMessage,
       String? successMessage}) {
     return ContactRequestState(
         isLoading: isLoading ?? this.isLoading,
-        requestedUsers: requestedUsers ?? this.requestedUsers,
+        friendshipResponses: friendshipResponses ?? this.friendshipResponses,
         successMessage: successMessage,
         errorMessage: errorMessage);
   }
