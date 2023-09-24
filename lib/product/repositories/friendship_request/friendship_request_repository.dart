@@ -38,13 +38,13 @@ class FriendshipRequestRepository {
   }
 
   Future<SingleBaseResponseModel<FriendshipResponseModel>?> approve(
-      String senderId) async {
+      String friendshipRequestId) async {
     final response = await _networkManager.post<
             SingleBaseResponseModel<FriendshipResponseModel>,
             FriendshipResponseModel,
             ApproveRequestModel>(
         FriendshipResponseModel(), _FriendshipRequestApiPaths.approve,
-        data: ApproveRequestModel(senderId: senderId));
+        data: ApproveRequestModel(friendshipRequestId: friendshipRequestId));
     return response.model;
   }
 }
