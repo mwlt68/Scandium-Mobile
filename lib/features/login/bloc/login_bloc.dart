@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:scandium/features/login/models/password.dart';
 import 'package:scandium/features/login/models/username.dart';
+import 'package:scandium/product/constants/application_constants.dart';
 import 'package:scandium/product/repositories/user/user_repository.dart';
 
 part 'login_event.dart';
@@ -52,13 +53,18 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       try {
         var response = await _userRepository.authenticate(
             username: state.username.value, password: state.password.value);
-        if (response?.value != null && response!.hasNotError) {
+        if (response == null) {
+          emit(state.copyWith(
+              status: FormzStatus.submissionFailure,
+              errorMessage: "Connection error !"));
+        } else if (response.value != null && response.hasNotError) {
           emit(state.copyWith(
               status: FormzStatus.submissionSuccess, errorMessage: null));
         } else {
           emit(state.copyWith(
               status: FormzStatus.submissionFailure,
-              errorMessage: response?.errorMessage));
+              errorMessage: response.errorMessage ??
+                  ApplicationConstants.instance.unexpectedErrorDefaultMessage));
         }
       } catch (e) {
         emit(state.copyWith(
