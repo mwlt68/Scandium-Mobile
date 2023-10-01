@@ -96,7 +96,7 @@ abstract class NetworkManager implements INetworkManager, ITokenable {
   BR? getBaseResponse<BR extends BaseResponseModel<Res>,
       Res extends IFromMappable>(Res res, dynamic data) {
     try {
-      if (data != null && data['value'] != null) {
+      if (data != null) {
         if (data['value'] is List) {
           return ListBaseResponseModel<Res>()
               .fromJson(data, (data) => res.fromMap(data)) as BR;

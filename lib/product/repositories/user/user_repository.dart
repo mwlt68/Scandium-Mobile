@@ -3,7 +3,6 @@ import 'package:scandium/core/base/models/base_response_model.dart';
 import 'package:scandium/core/init/network/network_manager.dart';
 import 'package:scandium/core/init/storage/storage_manager.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:scandium/product/models/response/user_response_model.dart';
 import 'package:scandium/product/models/response/user_search_response_model.dart';
 import 'package:scandium/product/repositories/user/authentication_request_model.dart';
 import 'package:scandium/product/repositories/user/register_request_model.dart';
