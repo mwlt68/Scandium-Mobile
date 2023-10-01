@@ -22,7 +22,7 @@ class RegisterPage extends StatelessWidget {
             return RegisterBloc(
                 userRepository: RepositoryProvider.of<UserRepository>(context));
           },
-          child: const RegisterForm(),
+          child: RegisterForm(),
         ),
       ),
     );

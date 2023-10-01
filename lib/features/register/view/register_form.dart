@@ -5,39 +5,16 @@ import 'package:scandium/features/login/view/login_page.dart';
 import 'package:scandium/features/register/bloc/register_bloc.dart';
 import 'package:scandium/product/constants/application_constants.dart';
 import 'package:scandium/product/widgets/conditional_circular_progress.dart';
+part 'register_form_values.dart';
 
 class RegisterForm extends StatelessWidget {
-  const RegisterForm({super.key});
+  RegisterForm({super.key});
+  final _RegisterFormValues _values = _RegisterFormValues();
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<RegisterBloc, RegisterState>(
-      listener: (context, state) {
-        if (state.status.isSubmissionFailure) {
-          var snackBar = SnackBar(
-            content: Text(state.errorMessage ??
-                ApplicationConstants.instance.unexpectedErrorDefaultMessage),
-            backgroundColor: Colors.red,
-          );
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(snackBar);
-        } else if (state.registered == true) {
-          const snackBar = SnackBar(
-            content: Text('Registration successful please login.'),
-            backgroundColor: Colors.green,
-          );
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(snackBar);
-          Future.delayed(
-              Duration(milliseconds: snackBar.duration.inMilliseconds), () {
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (builder) => const LoginPage()),
-                (route) => false);
-          });
-        }
-      },
+      listener: _registerBlocListener,
       child: Align(
         alignment: const Alignment(0, -1 / 3),
         child: Column(
@@ -49,26 +26,55 @@ class RegisterForm extends StatelessWidget {
             const Padding(padding: EdgeInsets.all(12)),
             _PasswordConfirmationInput(),
             const Padding(padding: EdgeInsets.all(12)),
-            _RegisterButton(),
+            _RegisterOrLogin(),
           ],
         ),
       ),
     );
   }
+
+  void _registerBlocListener(context, state) {
+    if (state.status.isSubmissionFailure) {
+      var snackBar = SnackBar(
+        content: Text(state.errorMessage ??
+            ApplicationConstants.instance.unexpectedErrorDefaultMessage),
+        backgroundColor: Colors.red,
+      );
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
+    } else if (state.registered == true) {
+      var snackBar = SnackBar(
+        content: Text(_values.registrationSuccessfulText),
+        backgroundColor: Colors.green,
+      );
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
+      Future.delayed(Duration(milliseconds: snackBar.duration.inMilliseconds),
+          () {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (builder) => const LoginPage()),
+            (route) => false);
+      });
+    }
+  }
 }
 
 class _UsernameInput extends StatelessWidget {
+  final _RegisterFormValues _values = _RegisterFormValues();
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RegisterBloc, RegisterState>(
       builder: (context, state) {
         return TextField(
-          key: const Key('registerForm_usernameInput_textField'),
+          key: Key(_values.usernameInputKey),
           onChanged: (username) => context
               .read<RegisterBloc>()
               .add(RegisterUsernameChanged(username)),
           decoration: InputDecoration(
-              labelText: 'Username',
+              labelText: _values.usernameLabelText,
               errorText: state.username.getErrorMessage()),
         );
       },
@@ -78,18 +84,21 @@ class _UsernameInput extends StatelessWidget {
 }
 
 class _PasswordInput extends StatelessWidget {
+  final _RegisterFormValues _values = _RegisterFormValues();
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RegisterBloc, RegisterState>(
       builder: (context, state) {
         return TextField(
-          key: const Key('registerForm_passwordInput_textField'),
+          key: Key(_values.passwordInputKey),
           onChanged: (password) => context
               .read<RegisterBloc>()
               .add(RegisterPasswordChanged(password)),
           decoration: InputDecoration(
-              labelText: 'Password',
+              labelText: _values.passwordLabelText,
               errorText: state.password.getErrorMessage()),
+          obscureText: true,
         );
       },
       buildWhen: (previous, current) => previous.password != current.password,
@@ -98,18 +107,21 @@ class _PasswordInput extends StatelessWidget {
 }
 
 class _PasswordConfirmationInput extends StatelessWidget {
+  final _RegisterFormValues _values = _RegisterFormValues();
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RegisterBloc, RegisterState>(
       builder: (context, state) {
         return TextField(
-          key: const Key('registerForm_passwordConfirmationInput_textField'),
+          key: Key(_values.passwordConfimationInputKey),
           onChanged: (passwordConfirmation) => context
               .read<RegisterBloc>()
               .add(RegisterPasswordConfirmChanged(passwordConfirmation)),
           decoration: InputDecoration(
-              labelText: 'Password Confirmation',
+              labelText: _values.passwordConfirmationLabelText,
               errorText: state.passwordConfirm.getErrorMessage()),
+          obscureText: true,
         );
       },
       buildWhen: (previous, current) =>
@@ -119,7 +131,9 @@ class _PasswordConfirmationInput extends StatelessWidget {
   }
 }
 
-class _RegisterButton extends StatelessWidget {
+class _RegisterOrLogin extends StatelessWidget {
+  final _RegisterFormValues _values = _RegisterFormValues();
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RegisterBloc, RegisterState>(
@@ -127,31 +141,41 @@ class _RegisterButton extends StatelessWidget {
       builder: (context, state) {
         return ConditionalCircularProgress(
             isLoading: state.status.isSubmissionInProgress,
-            child: Row(
+            child: Column(
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                            builder: (builder) => const LoginPage()),
-                        (route) => false);
-                  },
-                  child: const Text('Login Page'),
-                ),
-                ElevatedButton(
-                  onPressed:
-                      state.status.isValidated && state.registered != true
-                          ? () {
-                              context
-                                  .read<RegisterBloc>()
-                                  .add(const RegisterSubmitted());
-                            }
-                          : null,
-                  child: const Text('Register'),
-                ),
+                _registerButton(state, context),
+                _loginRow(context),
               ],
             ));
       },
+    );
+  }
+
+  Row _loginRow(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [Text(_values.registerInfoText), _loginButton(context)],
+    );
+  }
+
+  ElevatedButton _registerButton(RegisterState state, BuildContext context) {
+    return ElevatedButton(
+        onPressed: state.status.isValidated && state.registered != true
+            ? () {
+                context.read<RegisterBloc>().add(const RegisterSubmitted());
+              }
+            : null,
+        child: Text(_values.registerPageButtonText));
+  }
+
+  TextButton _loginButton(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (builder) => const LoginPage()),
+            (route) => false);
+      },
+      child: Text(_values.loginButtonText),
     );
   }
 }
