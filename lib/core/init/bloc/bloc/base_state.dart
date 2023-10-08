@@ -5,7 +5,8 @@ enum BaseStateStatus { loading, success, error }
 
 abstract class BaseState<T extends BaseState<T>> extends Equatable {
   BaseState(
-      {BaseStateStatus? status,
+      {this.dialogModel,
+      BaseStateStatus? status,
       List<String>? errorKeys,
       List<String>? warningKeys,
       List<String>? successfulKeys}) {
@@ -14,23 +15,28 @@ abstract class BaseState<T extends BaseState<T>> extends Equatable {
     this.warningKeys = warningKeys ?? [];
     this.successfulKeys = successfulKeys ?? [];
   }
+
   late BaseStateStatus status;
   late List<String> errorKeys;
   late List<String> warningKeys;
   late List<String> successfulKeys;
+  late BaseBlocDialogModel? dialogModel;
 
   @override
-  List<Object?> get props => [status, errorKeys, warningKeys, successfulKeys];
+  List<Object?> get props =>
+      [status, errorKeys, warningKeys, successfulKeys, dialogModel];
 
   T copyWithBase(
       {BaseStateStatus? status,
       List<String>? errorKeys,
       List<String>? warningKeys,
-      List<String>? successfulKeys});
+      List<String>? successfulKeys,
+      BaseBlocDialogModel? dialogModel});
 
   clear() {
     errorKeys = List.empty();
     successfulKeys = List.empty();
     warningKeys = List.empty();
+    dialogModel = null;
   }
 }

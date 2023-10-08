@@ -8,7 +8,8 @@ class LoginState extends BaseState<LoginState> {
       super.errorKeys,
       super.warningKeys,
       super.successfulKeys,
-      super.status});
+      super.status,
+      super.dialogModel});
 
   @override
   List<Object?> get props =>
@@ -31,7 +32,8 @@ class LoginState extends BaseState<LoginState> {
       BaseStateStatus? status,
       List<String>? errorKeys,
       List<String>? successfulKeys,
-      List<String>? warningKeys}) {
+      List<String>? warningKeys,
+      BaseBlocDialogModel? dialogModel}) {
     return LoginState(
         formStatus: formStatus ?? this.formStatus,
         username: username ?? this.username,
@@ -39,7 +41,8 @@ class LoginState extends BaseState<LoginState> {
         status: status ?? this.status,
         errorKeys: errorKeys ?? this.errorKeys,
         successfulKeys: successfulKeys ?? this.successfulKeys,
-        warningKeys: warningKeys ?? this.warningKeys);
+        warningKeys: warningKeys ?? this.warningKeys,
+        dialogModel: dialogModel ?? this.dialogModel);
   }
 
   @override
@@ -47,11 +50,13 @@ class LoginState extends BaseState<LoginState> {
       {BaseStateStatus? status,
       List<String>? errorKeys,
       List<String>? warningKeys,
-      List<String>? successfulKeys}) {
+      List<String>? successfulKeys,
+      BaseBlocDialogModel? dialogModel}) {
     return copyWith(
         status: status,
         errorKeys: errorKeys,
         successfulKeys: successfulKeys,
-        warningKeys: warningKeys);
+        warningKeys: warningKeys,
+        dialogModel: dialogModel);
   }
 }
