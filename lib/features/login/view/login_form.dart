@@ -4,7 +4,7 @@ import 'package:formz/formz.dart';
 import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
 import 'package:scandium/features/login/bloc/login_bloc.dart';
 import 'package:scandium/features/register/view/register_page.dart';
-import 'package:scandium/product/widgets/conditional_circular_progress.dart';
+import 'package:scandium/product/widgets/progress_indicators/conditional_circular_progress.dart';
 part 'login_form_values.dart';
 
 class LoginForm extends StatelessWidget {

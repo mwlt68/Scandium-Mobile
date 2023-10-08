@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
+import 'package:scandium/core/init/bloc/model/base_bloc_dialog_model.dart';
 import 'package:scandium/features/login/models/password.dart';
 import 'package:scandium/features/login/models/username.dart';
 import 'package:scandium/product/repositories/user/user_repository.dart';

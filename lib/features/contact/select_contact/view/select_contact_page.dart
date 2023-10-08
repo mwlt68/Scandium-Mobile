@@ -6,9 +6,9 @@ import 'package:scandium/features/contact/select_contact/bloc/select_contact_blo
 import 'package:scandium/product/models/base/selectable_model.dart';
 import 'package:scandium/product/repositories/friendship_request/friendship_request_repository.dart';
 import 'package:scandium/product/repositories/user/user_repository.dart';
-import 'package:scandium/product/widgets/button_card.dart';
-import 'package:scandium/product/widgets/conditional_circular_progress.dart';
-import 'package:scandium/product/widgets/contact_card.dart';
+import 'package:scandium/product/widgets/cards/button_card.dart';
+import 'package:scandium/product/widgets/cards/contact_card.dart';
+import 'package:scandium/product/widgets/progress_indicators/conditional_circular_progress.dart';
 
 import '../../contact_request/view/contact_request_page.dart';
 

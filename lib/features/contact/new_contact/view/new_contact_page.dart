@@ -5,8 +5,8 @@ import 'package:scandium/product/models/base/selectable_model.dart';
 import 'package:scandium/product/models/response/user_search_response_model.dart';
 import 'package:scandium/product/repositories/friendship_request/friendship_request_repository.dart';
 import 'package:scandium/product/repositories/user/user_repository.dart';
-import 'package:scandium/product/widgets/conditional_circular_progress.dart';
-import 'package:scandium/product/widgets/contact_card.dart';
+import 'package:scandium/product/widgets/cards/contact_card.dart';
+import 'package:scandium/product/widgets/progress_indicators/conditional_circular_progress.dart';
 
 class NewContactPage extends StatefulWidget {
   const NewContactPage({super.key});

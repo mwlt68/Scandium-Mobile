@@ -7,7 +7,7 @@ import 'package:scandium/product/constants/application_constants.dart';
 import 'package:scandium/product/models/response/conversation_reponse_model.dart';
 import 'package:scandium/product/models/response/user_response_model.dart';
 import 'package:scandium/product/repositories/message/message_repository.dart';
-import 'package:scandium/product/widgets/conditional_circular_progress.dart';
+import 'package:scandium/product/widgets/progress_indicators/conditional_circular_progress.dart';
 import 'package:sticky_grouped_list/sticky_grouped_list.dart';
 
 class ChatPage extends StatefulWidget {

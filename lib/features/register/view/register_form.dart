@@ -4,7 +4,8 @@ import 'package:formz/formz.dart';
 import 'package:scandium/features/login/view/login_page.dart';
 import 'package:scandium/features/register/bloc/register_bloc.dart';
 import 'package:scandium/product/constants/application_constants.dart';
-import 'package:scandium/product/widgets/conditional_circular_progress.dart';
+
+import '../../../product/widgets/progress_indicators/conditional_circular_progress.dart';
 part 'register_form_values.dart';
 
 class RegisterForm extends StatelessWidget {

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scandium/features/login/bloc/login_bloc.dart';
 import 'package:scandium/features/login/view/login_form.dart';
-import 'package:scandium/product/bloc/base_scaffold_bloc.dart';
 import 'package:scandium/product/repositories/user/user_repository.dart';
+import 'package:scandium/product/widgets/scaffold/base_scaffold_bloc.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});

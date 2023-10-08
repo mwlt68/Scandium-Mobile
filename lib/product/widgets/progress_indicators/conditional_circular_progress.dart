@@ -21,7 +21,7 @@ class ConditionalCircularProgress extends StatelessWidget {
       );
     } else if (hasMessage == true) {
       return Center(
-        child: Text(message ?? defaultMessage ?? ""),
+        child: Text(message ?? defaultMessage ?? ''),
       );
     } else {
       return child;

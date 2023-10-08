@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:scandium/core/base/models/base_response_model.dart';
 import 'package:scandium/core/base/models/mappable.dart';
+import 'package:scandium/core/init/bloc/model/base_bloc_dialog_model.dart';
 import 'package:scandium/product/constants/application_constants.dart';
 
 part 'base_event.dart';
