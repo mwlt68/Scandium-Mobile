@@ -1,18 +1,17 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
 import 'package:scandium/features/login/models/password.dart';
 import 'package:scandium/features/login/models/username.dart';
-import 'package:scandium/product/constants/application_constants.dart';
 import 'package:scandium/product/repositories/user/user_repository.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
 
-class LoginBloc extends Bloc<LoginEvent, LoginState> {
+class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
   LoginBloc({required UserRepository userRepository})
       : _userRepository = userRepository,
-        super(const LoginState()) {
+        super(LoginState(status: BaseStateStatus.success)) {
     on<LoginUsernameChanged>(_onUsernameChanged);
     on<LoginPasswordChanged>(_onPasswordChanged);
     on<LoginSubmitted>(_onSubmitted);
@@ -25,11 +24,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     Emitter<LoginState> emit,
   ) {
     final username = Username.dirty(event.username);
+    var status = Formz.validate([state.password, username]);
     emit(
-      state.copyWith(
-        username: username,
-        status: Formz.validate([state.password, username]),
-      ),
+      state.copyWith(username: username, formStatus: status),
     );
   }
 
@@ -38,38 +35,22 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     Emitter<LoginState> emit,
   ) {
     final password = Password.dirty(event.password);
+    var status = Formz.validate([password, state.username]);
+
     emit(
-      state.copyWith(
-        password: password,
-        status: Formz.validate([password, state.username]),
-      ),
+      state.copyWith(password: password, formStatus: status),
     );
   }
 
   Future<void> _onSubmitted(
       LoginSubmitted event, Emitter<LoginState> emit) async {
-    if (state.status.isValidated) {
-      emit(state.copyWith(status: FormzStatus.submissionInProgress));
-      try {
-        var response = await _userRepository.authenticate(
-            username: state.username.value, password: state.password.value);
-        if (response == null) {
-          emit(state.copyWith(
-              status: FormzStatus.submissionFailure,
-              errorMessage: "Connection error !"));
-        } else if (response.value != null && response.hasNotError) {
-          emit(state.copyWith(
-              status: FormzStatus.submissionSuccess, errorMessage: null));
-        } else {
-          emit(state.copyWith(
-              status: FormzStatus.submissionFailure,
-              errorMessage: response.errorMessage ??
-                  ApplicationConstants.instance.unexpectedErrorDefaultMessage));
-        }
-      } catch (e) {
-        emit(state.copyWith(
-            status: FormzStatus.submissionFailure, errorMessage: null));
-      }
+    if (state.formStatus.isValidated) {
+      emit(state.copyWith(status: BaseStateStatus.loading));
+
+      var response = await _userRepository.authenticate(
+          username: state.username.value, password: state.password.value);
+
+      emitBaseState(emit, response);
     }
   }
 }
