@@ -30,4 +30,12 @@ class BaseBloc<TEvent extends BaseEvent, TState extends BaseState<TState>>
     }
     return false;
   }
+
+  void emitErrorKeys(
+      Emitter<TState> emit, List<ErrorResponseContent>? errorContents) {
+    emit(state.copyWithBase(
+        status: BaseStateStatus.success,
+        errorKeys: errorContents?.map((e) => e.title!).toList() ??
+            [ApplicationConstants.instance.unexpectedErrorDefaultMessage]));
+  }
 }

@@ -48,4 +48,8 @@ extension BaseStateHelpers<T extends BaseState<T>> on T {
       status != current.status ||
       successfulKeys != current.successfulKeys ||
       warningKeys != current.warningKeys;
+
+  bool get isLoading => status == BaseStateStatus.loading;
+  bool get isFailed => status == BaseStateStatus.error;
+  bool get isSuccessful => status == BaseStateStatus.error;
 }
