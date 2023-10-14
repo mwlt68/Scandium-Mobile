@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
 import 'package:scandium/features/chat/bloc/chat_bloc.dart';
 import 'package:scandium/features/chat/view/own_message_card.dart';
 import 'package:scandium/product/constants/application_constants.dart';
@@ -8,6 +9,7 @@ import 'package:scandium/product/models/response/conversation_reponse_model.dart
 import 'package:scandium/product/models/response/user_response_model.dart';
 import 'package:scandium/product/repositories/message/message_repository.dart';
 import 'package:scandium/product/widgets/progress_indicators/conditional_circular_progress.dart';
+import 'package:scandium/product/widgets/scaffold/base_scaffold_bloc.dart';
 import 'package:sticky_grouped_list/sticky_grouped_list.dart';
 
 class ChatPage extends StatefulWidget {
@@ -23,28 +25,15 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ChatBloc(
-          messageRepository: RepositoryProvider.of<MessageRepository>(context))
-        ..add(GetConversationEvent(widget.otherUserId)),
-      child: _blocListener(),
-    );
-  }
-
-  _blocListener() {
-    return BlocListener<ChatBloc, ChatState>(
-      listener: (context, state) {
-        if (state.error != null) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: Text(state.error!)));
-        }
-      },
-      child: Scaffold(
-        appBar: _appBar(),
-        body: _body(),
-      ),
-    );
+    return BaseScaffoldBlocListener<ChatBloc, ChatState, ChatEvent>(
+        create: (context) => ChatBloc(
+            messageRepository:
+                RepositoryProvider.of<MessageRepository>(context))
+          ..add(GetConversationEvent(widget.otherUserId)),
+        child: Scaffold(
+          appBar: _appBar(),
+          body: _body(),
+        ));
   }
 
   _appBar() {

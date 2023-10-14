@@ -1,42 +1,63 @@
 part of 'chat_bloc.dart';
 
-class ChatState extends Equatable {
+class ChatState extends BaseState<ChatState> {
   ChatState(
       {List<ConversationMessageModel>? messages,
       String? content,
       this.otherUser,
       this.currentUser,
-      this.error,
-      this.isLoading = false}) {
+      super.status,
+      super.errorKeys,
+      super.successfulKeys,
+      super.warningKeys,
+      super.dialogModel}) {
     this.messages = messages ?? List.empty(growable: true);
     this.content = content ?? '';
   }
   late List<ConversationMessageModel> messages;
   late String content;
-  final UserResponseModel? otherUser;
-  final UserResponseModel? currentUser;
-  final String? error;
-  final bool isLoading;
-
+  late UserResponseModel? otherUser;
+  late UserResponseModel? currentUser;
   ChatState copyWith(
       {List<ConversationMessageModel>? messages,
       UserResponseModel? otherUser,
       UserResponseModel? currentUser,
-      String? error,
       String? content,
-      bool? isLoading}) {
+      BaseStateStatus? status,
+      List<String>? errorKeys,
+      List<String>? successfulKeys,
+      List<String>? warningKeys,
+      BaseBlocDialogModel? dialogModel}) {
     return ChatState(
         messages: messages ?? this.messages,
         otherUser: otherUser ?? this.otherUser,
         currentUser: currentUser ?? this.currentUser,
-        error: error ?? this.error,
         content: content ?? this.content,
-        isLoading: isLoading ?? this.isLoading);
+        dialogModel: dialogModel ?? this.dialogModel,
+        errorKeys: errorKeys ?? this.errorKeys,
+        successfulKeys: successfulKeys ?? this.successfulKeys,
+        warningKeys: warningKeys ?? this.warningKeys,
+        status: status ?? this.status);
   }
 
   @override
   List<Object?> get props =>
-      [messages, otherUser, currentUser, error, isLoading, content];
+      super.props + [messages, otherUser, currentUser, content];
+
+  @override
+  ChatState copyWithBase(
+      {BaseStateStatus? status,
+      List<String>? errorKeys,
+      List<String>? warningKeys,
+      List<String>? successfulKeys,
+      BaseBlocDialogModel? dialogModel}) {
+    return copyWith(
+        status: status,
+        dialogModel: dialogModel,
+        errorKeys: errorKeys,
+        warningKeys: warningKeys,
+        successfulKeys: successfulKeys);
+  }
 }
 
 extension ConversationMessageModelHelpers on ConversationMessageModel {
