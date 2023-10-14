@@ -3,9 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:scandium/features/login/view/login_page.dart';
 import 'package:scandium/features/register/bloc/register_bloc.dart';
-import 'package:scandium/product/constants/application_constants.dart';
-
 import '../../../product/widgets/progress_indicators/conditional_circular_progress.dart';
+
 part 'register_form_values.dart';
 
 class RegisterForm extends StatelessWidget {
@@ -14,51 +13,21 @@ class RegisterForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<RegisterBloc, RegisterState>(
-      listener: _registerBlocListener,
-      child: Align(
-        alignment: const Alignment(0, -1 / 3),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _UsernameInput(),
-            const Padding(padding: EdgeInsets.all(12)),
-            _PasswordInput(),
-            const Padding(padding: EdgeInsets.all(12)),
-            _PasswordConfirmationInput(),
-            const Padding(padding: EdgeInsets.all(12)),
-            _RegisterOrLogin(),
-          ],
-        ),
+    return Align(
+      alignment: const Alignment(0, -1 / 3),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _UsernameInput(),
+          const Padding(padding: EdgeInsets.all(12)),
+          _PasswordInput(),
+          const Padding(padding: EdgeInsets.all(12)),
+          _PasswordConfirmationInput(),
+          const Padding(padding: EdgeInsets.all(12)),
+          _RegisterOrLogin(),
+        ],
       ),
     );
-  }
-
-  void _registerBlocListener(context, state) {
-    if (state.status.isSubmissionFailure) {
-      var snackBar = SnackBar(
-        content: Text(state.errorMessage ??
-            ApplicationConstants.instance.unexpectedErrorDefaultMessage),
-        backgroundColor: Colors.red,
-      );
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
-    } else if (state.registered == true) {
-      var snackBar = SnackBar(
-        content: Text(_values.registrationSuccessfulText),
-        backgroundColor: Colors.green,
-      );
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
-      Future.delayed(Duration(milliseconds: snackBar.duration.inMilliseconds),
-          () {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (builder) => const LoginPage()),
-            (route) => false);
-      });
-    }
   }
 }
 
@@ -138,10 +107,11 @@ class _RegisterOrLogin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RegisterBloc, RegisterState>(
-      buildWhen: (previous, current) => previous.status != current.status,
+      buildWhen: (previous, current) =>
+          previous.formStatus != current.formStatus,
       builder: (context, state) {
         return ConditionalCircularProgress(
-            isLoading: state.status.isSubmissionInProgress,
+            isLoading: state.formStatus.isSubmissionInProgress,
             child: Column(
               children: [
                 _registerButton(state, context),
@@ -161,7 +131,7 @@ class _RegisterOrLogin extends StatelessWidget {
 
   ElevatedButton _registerButton(RegisterState state, BuildContext context) {
     return ElevatedButton(
-        onPressed: state.status.isValidated && state.registered != true
+        onPressed: state.formStatus.isValidated && state.registered != true
             ? () {
                 context.read<RegisterBloc>().add(const RegisterSubmitted());
               }
