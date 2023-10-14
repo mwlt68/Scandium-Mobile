@@ -1,6 +1,6 @@
 part of 'register_bloc.dart';
 
-abstract class RegisterEvent extends Equatable {
+abstract class RegisterEvent extends BaseEvent {
   const RegisterEvent();
 
   @override
