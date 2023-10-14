@@ -40,3 +40,12 @@ abstract class BaseState<T extends BaseState<T>> extends Equatable {
     dialogModel = null;
   }
 }
+
+extension BaseStateHelpers<T extends BaseState<T>> on T {
+  bool baseStateCompare(T current) =>
+      dialogModel != current.dialogModel ||
+      errorKeys != current.errorKeys ||
+      status != current.status ||
+      successfulKeys != current.successfulKeys ||
+      warningKeys != current.warningKeys;
+}

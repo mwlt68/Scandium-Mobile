@@ -12,7 +12,7 @@ class BaseBloc<TEvent extends BaseEvent, TState extends BaseState<TState>>
     extends Bloc<TEvent, TState> {
   BaseBloc(super.initialState);
 
-  emitBaseState<T extends IFromMappable>(
+  bool emitBaseState<T extends IFromMappable>(
       Emitter<TState> emit, SingleBaseResponseModel<T>? response) {
     if (response == null) {
       emit(state.copyWithBase(
@@ -21,11 +21,13 @@ class BaseBloc<TEvent extends BaseEvent, TState extends BaseState<TState>>
     } else if (response.value != null && response.hasNotError) {
       emit(state
           .copyWithBase(status: BaseStateStatus.success, errorKeys: const []));
+      return true;
     } else {
       emit(state.copyWithBase(
           status: BaseStateStatus.success,
           errorKeys: response.errorContents?.map((e) => e.title!).toList() ??
               [ApplicationConstants.instance.unexpectedErrorDefaultMessage]));
     }
+    return false;
   }
 }

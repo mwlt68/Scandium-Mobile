@@ -109,15 +109,15 @@ class BaseScaffoldBlocListener<
   }
 
   bool _listenWhen(TState previous, TState current) {
-    var result = previous != current;
+    var result = previous.baseStateCompare(current);
     if (listenWhen != null) {
       result = result || listenWhen!(previous, current);
     }
     return result;
   }
 
-  bool _buildWhen(previous, current) {
-    var result = previous.status != current.status;
+  bool _buildWhen(TState previous, TState current) {
+    var result = previous.baseStateCompare(current);
     if (buildWhen != null) {
       result = result || buildWhen!(previous, current);
     }
