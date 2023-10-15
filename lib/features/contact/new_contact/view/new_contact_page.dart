@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
 import 'package:scandium/features/contact/new_contact/bloc/new_contact_bloc.dart';
 import 'package:scandium/product/models/base/selectable_model.dart';
 import 'package:scandium/product/models/response/user_search_response_model.dart';
@@ -7,6 +8,7 @@ import 'package:scandium/product/repositories/friendship_request/friendship_requ
 import 'package:scandium/product/repositories/user/user_repository.dart';
 import 'package:scandium/product/widgets/cards/contact_card.dart';
 import 'package:scandium/product/widgets/progress_indicators/conditional_circular_progress.dart';
+import 'package:scandium/product/widgets/scaffold/base_scaffold_bloc.dart';
 
 class NewContactPage extends StatefulWidget {
   const NewContactPage({super.key});
@@ -20,31 +22,12 @@ class _NewContactPageState extends State<NewContactPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BaseScaffoldBlocListener<NewContactBloc, NewContactState,
+            NewContactEvent>(
         create: (context) => NewContactBloc(
             userRepository: RepositoryProvider.of<UserRepository>(context),
             friendshipRequestRepository:
                 RepositoryProvider.of<FriendshipRequestRepository>(context)),
-        child: _blocListener());
-  }
-
-  BlocListener<NewContactBloc, NewContactState> _blocListener() {
-    return BlocListener<NewContactBloc, NewContactState>(
-        listener: (context, state) {
-          if (state.errorMessage != null) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(SnackBar(content: Text(state.errorMessage!)));
-          }
-          if (state.successMessage != null) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(SnackBar(
-                content: Text(state.successMessage!),
-                backgroundColor: Colors.green,
-              ));
-          }
-        },
         child: Scaffold(
           appBar: _scaffoldAppBar(),
           body: _scaffoldBody(),
@@ -80,7 +63,9 @@ class _NewContactPageState extends State<NewContactPage> {
               }),
         );
       },
-      buildWhen: (previous, current) => previous.isLoading != current.isLoading,
+      buildWhen: (previous, current) =>
+          previous.isLoading != current.isLoading ||
+          previous.searcResultUsers != current.searcResultUsers,
     );
   }
 
