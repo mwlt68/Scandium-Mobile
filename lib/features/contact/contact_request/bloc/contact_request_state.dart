@@ -10,7 +10,7 @@ class ContactRequestState extends BaseState<ContactRequestState> {
       super.dialogModel});
 
   @override
-  List<Object?> get props => super.props + [friendshipResponses];
+  List<Object?> get subProps => [friendshipResponses];
 
   final List<FriendshipResponseModel>? friendshipResponses;
 

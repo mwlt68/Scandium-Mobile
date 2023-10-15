@@ -12,9 +12,7 @@ class LoginState extends BaseState<LoginState> {
       super.dialogModel});
 
   @override
-  List<Object?> get props =>
-      super.props +
-      [
+  List<Object?> get subProps => [
         formStatus,
         username,
         password,

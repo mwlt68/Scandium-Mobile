@@ -24,7 +24,9 @@ abstract class BaseState<T extends BaseState<T>> extends Equatable {
 
   @override
   List<Object?> get props =>
-      [status, errorKeys, warningKeys, successfulKeys, dialogModel];
+      subProps + [status, errorKeys, warningKeys, successfulKeys, dialogModel];
+
+  List<Object?> get subProps;
 
   T copyWithBase(
       {BaseStateStatus? status,

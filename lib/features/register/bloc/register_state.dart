@@ -13,8 +13,8 @@ class RegisterState extends BaseState<RegisterState> {
       super.dialogModel});
 
   @override
-  List<Object?> get props =>
-      super.props + [username, password, passwordConfirm, registered];
+  List<Object?> get subProps =>
+      [username, password, passwordConfirm, registered];
 
   final FormzStatus formStatus;
   final Username username;

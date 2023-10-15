@@ -41,8 +41,7 @@ class ChatState extends BaseState<ChatState> {
   }
 
   @override
-  List<Object?> get props =>
-      super.props + [messages, otherUser, currentUser, content];
+  List<Object?> get subProps => [messages, otherUser, currentUser, content];
 
   @override
   ChatState copyWithBase(
