@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
 import 'package:scandium/features/contact/contact_request/bloc/contact_request_bloc.dart';
 import 'package:scandium/product/models/base/selectable_model.dart';
 import 'package:scandium/product/repositories/friendship_request/friendship_request_repository.dart';
 import 'package:scandium/product/widgets/cards/contact_card.dart';
 import 'package:scandium/product/widgets/progress_indicators/conditional_circular_progress.dart';
+import 'package:scandium/product/widgets/scaffold/base_scaffold_bloc.dart';
 
 class ContactRequestPage extends StatefulWidget {
   const ContactRequestPage({super.key});
@@ -23,31 +25,12 @@ class _ContactRequestPageState extends State<ContactRequestPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BaseScaffoldBlocListener<ContactRequestBloc, ContactRequestState,
+            ContactRequestEvent>(
         create: (context) => ContactRequestBloc(
             friendshipRequestRepository:
                 RepositoryProvider.of<FriendshipRequestRepository>(context))
           ..add(const GetRequestsEvent()),
-        child: _blocListener());
-  }
-
-  BlocListener<ContactRequestBloc, ContactRequestState> _blocListener() {
-    return BlocListener<ContactRequestBloc, ContactRequestState>(
-        listener: (context, state) {
-          if (state.errorMessage != null) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(SnackBar(content: Text(state.errorMessage!)));
-          }
-          if (state.successMessage != null) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(SnackBar(
-                content: Text(state.successMessage!),
-                backgroundColor: Colors.green,
-              ));
-          }
-        },
         child: Scaffold(
           appBar: _scaffoldAppBar(),
           body: _scaffoldBody(),
