@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
+import 'package:scandium/core/init/bloc/model/base_bloc_dialog_model.dart';
 import 'package:scandium/product/hub/message_hub.dart';
 import 'package:scandium/product/models/response/message_response_model.dart';
 import 'package:scandium/product/repositories/message/message_repository.dart';
@@ -8,21 +9,22 @@ import 'package:scandium/product/repositories/user/user_repository.dart';
 part 'home_event.dart';
 part 'home_state.dart';
 
-class HomeBloc extends Bloc<HomeEvent, HomeState> {
+class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
   HomeBloc(
       {required UserRepository userRepository,
       required MessageRepository messageRepository})
       : _userRepository = userRepository,
         _messageRepository = messageRepository,
-        super(HomeState(isLoading: true)) {
+        super(HomeState()) {
     on<LogOutSubmitted>(_onLogOut);
     on<LoadHomeEvent>(_onLoadHome);
     on<MessageReceiveEvent>(_onMessageReceiveEvent);
-    _messageHub = MessageHub(
-        messageReceive: (messageResponse) =>
-            {add(MessageReceiveEvent(messageResponse))});
+    _messageHub = MessageHub(messageReceive: addMessageReceiveEvent);
     _messageHub.openChatConnection();
   }
+
+  void addMessageReceiveEvent(messageResponse) =>
+      {add(MessageReceiveEvent(messageResponse))};
 
   final UserRepository _userRepository;
   final MessageRepository _messageRepository;
@@ -39,13 +41,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     LoadHomeEvent event,
     Emitter<HomeState> emit,
   ) async {
-    emit(HomeState(isLoading: true));
+    emitSetLoading(emit, true);
     final messagesResponse = await _messageRepository.getLastMessages();
-    if (messagesResponse?.value != null && messagesResponse!.hasNotError) {
-      emit(HomeState(messages: messagesResponse.value!));
-    } else {
-      emit(HomeState(error: messagesResponse!.errorMessage));
-    }
+    emitBaseState(
+      emit,
+      messagesResponse,
+      whenSuccess: () {
+        emit(state.copyWith(messages: messagesResponse!.value!));
+      },
+    );
   }
 
   Future _onMessageReceiveEvent(
