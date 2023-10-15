@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
-import 'package:scandium/product/constants/application_constants.dart';
+import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
+import 'package:scandium/core/init/bloc/model/base_bloc_dialog_model.dart';
 import 'package:scandium/product/hub/friendship_request_hub.dart';
 import 'package:scandium/product/models/base/user.dart';
 import 'package:scandium/product/models/response/friendship_response_model.dart';
@@ -13,13 +13,14 @@ import 'package:scandium/product/repositories/user/user_repository.dart';
 part 'select_contact_event.dart';
 part 'select_contact_state.dart';
 
-class SelectContactBloc extends Bloc<SelectContactEvent, SelectContactState> {
+class SelectContactBloc
+    extends BaseBloc<SelectContactEvent, SelectContactState> {
   SelectContactBloc(
       {required FriendshipRequestRepository friendshipRequestRepository,
       required UserRepository userRepository})
       : _friendshipRequestRepository = friendshipRequestRepository,
         _userRepository = userRepository,
-        super(const SelectContactState(users: [])) {
+        super(SelectContactState(users: [])) {
     on<GetContactsEvent>(_onGetContacts);
     on<RequestApproveEvent>(_onRequestApproveEvent);
     _friendshipRequestHub = FriendshipRequestHub(
@@ -60,28 +61,23 @@ class SelectContactBloc extends Bloc<SelectContactEvent, SelectContactState> {
     GetContactsEvent event,
     Emitter<SelectContactState> emit,
   ) async {
-    emit(state.copyWith(isLoading: true));
+    emitSetLoading(emit, true);
     var result =
         await _friendshipRequestRepository.getAll(isOnlyAccepted: true);
-    if (result == null) {
-      emit(state.copyWith(
-          errorMessage:
-              ApplicationConstants.instance.unexpectedErrorDefaultMessage,
-          isLoading: false));
-    } else if (result.value != null && result.hasNotError) {
-      if (_currentUser != null) {
-        var users = result.value!
-            .where(
-                (element) => element.sender != null && element.receiver != null)
-            .map((e) =>
-                e.sender?.id == _currentUser!.id ? e.receiver! : e.sender!)
-            .toList();
-        emit(state.copyWith(users: users, isLoading: false));
-      } else {
-        emit(state.copyWith(isLoading: false));
-      }
-    } else {
-      emit(state.copyWith(errorMessage: result.errorMessage, isLoading: false));
-    }
+    emitBaseState(
+      emit,
+      result,
+      whenSuccess: () {
+        if (_currentUser != null) {
+          var users = result!.value!
+              .where((element) =>
+                  element.sender != null && element.receiver != null)
+              .map((e) =>
+                  e.sender?.id == _currentUser!.id ? e.receiver! : e.sender!)
+              .toList();
+          emit(state.copyWith(users: users));
+        }
+      },
+    );
   }
 }

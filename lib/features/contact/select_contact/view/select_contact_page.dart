@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
 import 'package:scandium/features/chat/view/chat_page.dart';
 import 'package:scandium/features/contact/new_contact/view/new_contact_page.dart';
 import 'package:scandium/features/contact/select_contact/bloc/select_contact_bloc.dart';
@@ -9,37 +10,21 @@ import 'package:scandium/product/repositories/user/user_repository.dart';
 import 'package:scandium/product/widgets/cards/button_card.dart';
 import 'package:scandium/product/widgets/cards/contact_card.dart';
 import 'package:scandium/product/widgets/progress_indicators/conditional_circular_progress.dart';
-
+import 'package:scandium/product/widgets/scaffold/base_scaffold_bloc.dart';
 import '../../contact_request/view/contact_request_page.dart';
 
-class SelectContactPage extends StatefulWidget {
+class SelectContactPage extends StatelessWidget {
   const SelectContactPage({Key? key}) : super(key: key);
 
   @override
-  _SelectContactPageState createState() => _SelectContactPageState();
-}
-
-class _SelectContactPageState extends State<SelectContactPage> {
-  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BaseScaffoldBlocListener<SelectContactBloc, SelectContactState,
+            SelectContactEvent>(
         create: (context) => SelectContactBloc(
             userRepository: RepositoryProvider.of<UserRepository>(context),
             friendshipRequestRepository:
                 RepositoryProvider.of<FriendshipRequestRepository>(context))
           ..add(GetContactsEvent()),
-        child: _blocListener());
-  }
-
-  BlocListener<SelectContactBloc, SelectContactState> _blocListener() {
-    return BlocListener<SelectContactBloc, SelectContactState>(
-        listener: (context, state) {
-          if (state.errorMessage != null) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(SnackBar(content: Text(state.errorMessage!)));
-          }
-        },
         child: Scaffold(appBar: _appBar(context), body: _body()));
   }
 
