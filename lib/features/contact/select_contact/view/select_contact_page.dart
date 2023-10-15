@@ -117,7 +117,7 @@ class SelectContactPage extends StatelessWidget {
 
   _followRequestsButtonOnPressed(BuildContext context) async {
     Navigator.push(context,
-            MaterialPageRoute(builder: (builder) => const ContactRequestPage()))
+            MaterialPageRoute(builder: (builder) => ContactRequestPage()))
         .then((value) {
       context.read<SelectContactBloc>().add(GetContactsEvent());
     });

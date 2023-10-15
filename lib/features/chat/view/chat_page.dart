@@ -12,14 +12,9 @@ import 'package:scandium/product/widgets/progress_indicators/conditional_circula
 import 'package:scandium/product/widgets/scaffold/base_scaffold_bloc.dart';
 import 'package:sticky_grouped_list/sticky_grouped_list.dart';
 
-class ChatPage extends StatefulWidget {
-  const ChatPage({required this.otherUserId, super.key});
+class ChatPage extends StatelessWidget {
+  ChatPage({required this.otherUserId, super.key});
   final String otherUserId;
-  @override
-  State<ChatPage> createState() => _ChatPageState();
-}
-
-class _ChatPageState extends State<ChatPage> {
   final GroupedItemScrollController _scrollController =
       GroupedItemScrollController();
 
@@ -29,20 +24,20 @@ class _ChatPageState extends State<ChatPage> {
         create: (context) => ChatBloc(
             messageRepository:
                 RepositoryProvider.of<MessageRepository>(context))
-          ..add(GetConversationEvent(widget.otherUserId)),
+          ..add(GetConversationEvent(otherUserId)),
         child: Scaffold(
-          appBar: _appBar(),
+          appBar: _appBar(context),
           body: _body(),
         ));
   }
 
-  _appBar() {
+  _appBar(BuildContext context) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(60),
       child: AppBar(
         leadingWidth: 70,
         titleSpacing: 0,
-        leading: _appBarLeading,
+        leading: _appBarLeading(context),
         title: _appBarTitle,
         actions: _appBarActions,
       ),
@@ -140,7 +135,7 @@ class _ChatPageState extends State<ChatPage> {
         ),
       );
 
-  Widget get _appBarLeading => InkWell(
+  Widget _appBarLeading(BuildContext context) => InkWell(
         onTap: () {
           Navigator.pop(context);
         },
@@ -254,7 +249,7 @@ class _ChatPageState extends State<ChatPage> {
               showModalBottomSheet(
                   backgroundColor: Colors.transparent,
                   context: context,
-                  builder: (builder) => bottomSheet());
+                  builder: (builder) => bottomSheet(context));
             },
           ),
           IconButton(
@@ -338,7 +333,7 @@ class _ChatPageState extends State<ChatPage> {
         isOwnCard: element.senderIsCurrentUser(currentUser.id!));
   }
 
-  Widget bottomSheet() {
+  Widget bottomSheet(BuildContext context) {
     return SizedBox(
       height: 278,
       width: MediaQuery.of(context).size.width,

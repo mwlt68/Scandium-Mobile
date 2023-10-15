@@ -8,20 +8,10 @@ import 'package:scandium/product/widgets/cards/contact_card.dart';
 import 'package:scandium/product/widgets/progress_indicators/conditional_circular_progress.dart';
 import 'package:scandium/product/widgets/scaffold/base_scaffold_bloc.dart';
 
-class ContactRequestPage extends StatefulWidget {
-  const ContactRequestPage({super.key});
+class ContactRequestPage extends StatelessWidget {
+  ContactRequestPage({super.key});
 
-  @override
-  State<ContactRequestPage> createState() => _ContactRequestPageState();
-}
-
-class _ContactRequestPageState extends State<ContactRequestPage> {
   late TextEditingController searchValueController;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
