@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
 import 'package:scandium/features/chat/view/chat_page.dart';
 import 'package:scandium/features/contact/new_contact/view/new_contact_page.dart';
 import 'package:scandium/features/contact/select_contact/bloc/select_contact_bloc.dart';
@@ -9,7 +8,7 @@ import 'package:scandium/product/repositories/friendship_request/friendship_requ
 import 'package:scandium/product/repositories/user/user_repository.dart';
 import 'package:scandium/product/widgets/cards/button_card.dart';
 import 'package:scandium/product/widgets/cards/contact_card.dart';
-import 'package:scandium/product/widgets/progress_indicators/conditional_circular_progress.dart';
+import 'package:scandium/product/widgets/progress_indicators/circular_progress_bloc_builder.dart';
 import 'package:scandium/product/widgets/scaffold/base_scaffold_bloc.dart';
 import '../../contact_request/view/contact_request_page.dart';
 
@@ -29,22 +28,19 @@ class SelectContactPage extends StatelessWidget {
   }
 
   Widget _body() {
-    return BlocBuilder<SelectContactBloc, SelectContactState>(
-      builder: (context, state) {
-        return ConditionalCircularProgress(
-          isLoading: state.isLoading,
-          child: ListView.builder(
-              itemCount: state.users!.length + 2,
-              itemBuilder: (context, index) {
-                if (index == 0) {
-                  return _newGroupCard();
-                } else if (index == 1) {
-                  return _newContactCard(context);
-                }
-                return _listViewContactCard(state, index, context);
-              }),
-        );
-      },
+    return CircularProgressBlocBuilder<SelectContactBloc, SelectContactState,
+        SelectContactEvent>(
+      getChild: (c, s) => ListView.builder(
+          itemCount: s.users!.length + 2,
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              return _newGroupCard();
+            } else if (index == 1) {
+              return _newContactCard(context);
+            }
+            return _listViewContactCard(s, index, context);
+          }),
+      buildWhen: (p, c) => p.users != c.users,
     );
   }
 

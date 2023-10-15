@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
 import 'package:scandium/features/contact/contact_request/bloc/contact_request_bloc.dart';
 import 'package:scandium/product/models/base/selectable_model.dart';
 import 'package:scandium/product/repositories/friendship_request/friendship_request_repository.dart';
 import 'package:scandium/product/widgets/cards/contact_card.dart';
-import 'package:scandium/product/widgets/progress_indicators/conditional_circular_progress.dart';
+import 'package:scandium/product/widgets/progress_indicators/circular_progress_bloc_builder.dart';
 import 'package:scandium/product/widgets/scaffold/base_scaffold_bloc.dart';
 
 class ContactRequestPage extends StatelessWidget {
@@ -28,18 +27,14 @@ class ContactRequestPage extends StatelessWidget {
   }
 
   _scaffoldBody() {
-    return BlocBuilder<ContactRequestBloc, ContactRequestState>(
-      builder: (context, state) {
-        return ConditionalCircularProgress(
-          isLoading: state.isLoading,
-          hasMessage: state.friendshipResponses == null ||
-              state.friendshipResponses!.isEmpty,
-          message: 'You have no friend requests',
-          child: _blocBuilderChild(state),
-        );
-      },
+    return CircularProgressBlocBuilder<ContactRequestBloc, ContactRequestState,
+        ContactRequestEvent>(
+      getChild: (c, state) => _blocBuilderChild(state),
+      hasMessage: (state) =>
+          state.friendshipResponses == null ||
+          state.friendshipResponses!.isEmpty,
+      message: 'You have no friend requests',
       buildWhen: (previous, current) =>
-          previous.isLoading != current.isLoading ||
           previous.friendshipResponses != current.friendshipResponses,
     );
   }

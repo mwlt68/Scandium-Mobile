@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
 import 'package:scandium/features/home/bloc/home_bloc.dart';
 import 'package:scandium/features/home/view/chat_list_page.dart';
 import 'package:scandium/product/repositories/message/message_repository.dart';
 import 'package:scandium/product/repositories/user/user_repository.dart';
-import 'package:scandium/product/widgets/progress_indicators/conditional_circular_progress.dart';
+import 'package:scandium/product/widgets/progress_indicators/circular_progress_bloc_builder.dart';
 import 'package:scandium/product/widgets/scaffold/base_scaffold_bloc.dart';
 
 class HomePage extends StatefulWidget {
@@ -44,11 +43,8 @@ class _HomePageState extends State<HomePage>
   }
 
   Widget _scaffoldBody(BuildContext context) {
-    return BlocBuilder<HomeBloc, HomeState>(
-      builder: (context, state) {
-        return ConditionalCircularProgress(
-            isLoading: state.isLoading,
-            child: TabBarView(
+    return CircularProgressBlocBuilder<HomeBloc, HomeState, HomeEvent>(
+        getChild: (c, s) => TabBarView(
               controller: _controller,
               children: const [
                 Text("CAMERA"),
@@ -57,9 +53,6 @@ class _HomePageState extends State<HomePage>
                 Text("CALLS"),
               ],
             ));
-      },
-      buildWhen: (previous, current) => previous.isLoading != current.isLoading,
-    );
   }
 
   PreferredSize _scaffoldAppBar() => PreferredSize(

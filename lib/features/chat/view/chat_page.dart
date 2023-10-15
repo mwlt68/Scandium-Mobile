@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
 import 'package:scandium/features/chat/bloc/chat_bloc.dart';
 import 'package:scandium/features/chat/view/own_message_card.dart';
 import 'package:scandium/product/constants/application_constants.dart';
 import 'package:scandium/product/models/response/conversation_reponse_model.dart';
 import 'package:scandium/product/models/response/user_response_model.dart';
 import 'package:scandium/product/repositories/message/message_repository.dart';
-import 'package:scandium/product/widgets/progress_indicators/conditional_circular_progress.dart';
+import 'package:scandium/product/widgets/progress_indicators/circular_progress_bloc_builder.dart';
 import 'package:scandium/product/widgets/scaffold/base_scaffold_bloc.dart';
 import 'package:sticky_grouped_list/sticky_grouped_list.dart';
 
@@ -103,37 +102,31 @@ class ChatPage extends StatelessWidget {
       ];
 
   Widget get _appBarTitle => InkWell(
-        onTap: () {},
-        child: Container(
-          margin: const EdgeInsets.all(6),
-          child: BlocBuilder<ChatBloc, ChatState>(
-            builder: (context, state) {
-              return ConditionalCircularProgress(
-                  isLoading: state.isLoading,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        state.otherUser?.username ??
-                            ApplicationConstants.instance.emptyFieldText,
-                        style: const TextStyle(
-                          fontSize: 18.5,
-                          fontWeight: FontWeight.bold,
-                        ),
+      onTap: () {},
+      child: Container(
+        margin: const EdgeInsets.all(6),
+        child: CircularProgressBlocBuilder<ChatBloc, ChatState, ChatEvent>(
+            getChild: (c, state) => Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      state.otherUser?.username ??
+                          ApplicationConstants.instance.emptyFieldText,
+                      style: const TextStyle(
+                        fontSize: 18.5,
+                        fontWeight: FontWeight.bold,
                       ),
-                      const Text(
-                        "today at 12:05",
-                        style: TextStyle(
-                          fontSize: 13,
-                        ),
-                      )
-                    ],
-                  ));
-            },
-          ),
-        ),
-      );
+                    ),
+                    const Text(
+                      "today at 12:05",
+                      style: TextStyle(
+                        fontSize: 13,
+                      ),
+                    )
+                  ],
+                )),
+      ));
 
   Widget _appBarLeading(BuildContext context) => InkWell(
         onTap: () {

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
 import 'package:scandium/features/login/bloc/login_bloc.dart';
 import 'package:scandium/features/register/view/register_page.dart';
-import 'package:scandium/product/widgets/progress_indicators/conditional_circular_progress.dart';
+import 'package:scandium/product/widgets/progress_indicators/circular_progress_bloc_builder.dart';
 part 'login_form_values.dart';
 
 class LoginForm extends StatelessWidget {
@@ -76,20 +75,15 @@ class _LoginOrRegister extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(
+    return CircularProgressBlocBuilder<LoginBloc, LoginState, LoginEvent>(
+      getChild: (c, s) => Column(
+        children: [
+          _loginButton(s, c),
+          _registerRow(c),
+        ],
+      ),
       buildWhen: (previous, current) =>
-          previous.status != current.status ||
           previous.formStatus != current.formStatus,
-      builder: (context, state) {
-        return ConditionalCircularProgress(
-            isLoading: state.status == BaseStateStatus.loading,
-            child: Column(
-              children: [
-                _loginButton(state, context),
-                _registerRow(context),
-              ],
-            ));
-      },
     );
   }
 

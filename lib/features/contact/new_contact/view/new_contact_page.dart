@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
 import 'package:scandium/features/contact/new_contact/bloc/new_contact_bloc.dart';
 import 'package:scandium/product/models/base/selectable_model.dart';
 import 'package:scandium/product/models/response/user_search_response_model.dart';
 import 'package:scandium/product/repositories/friendship_request/friendship_request_repository.dart';
 import 'package:scandium/product/repositories/user/user_repository.dart';
 import 'package:scandium/product/widgets/cards/contact_card.dart';
-import 'package:scandium/product/widgets/progress_indicators/conditional_circular_progress.dart';
+import 'package:scandium/product/widgets/progress_indicators/circular_progress_bloc_builder.dart';
 import 'package:scandium/product/widgets/scaffold/base_scaffold_bloc.dart';
 
 class NewContactPage extends StatefulWidget {
@@ -35,38 +34,34 @@ class _NewContactPageState extends State<NewContactPage> {
   }
 
   _scaffoldBody() {
-    return BlocBuilder<NewContactBloc, NewContactState>(
-      builder: (context, state) {
-        return ConditionalCircularProgress(
-          isLoading: state.isLoading,
-          child: ListView.builder(
-              itemCount: state.searcResultUsers!.length,
-              itemBuilder: (context, index) {
-                return ContactCard(
-                  contact: SelectableModel(
-                      model: state.searcResultUsers![index].userResponseDto),
-                  contactCardListTileTrailing: ContactCardListTileTrailing(
-                    buttonText: state
-                        .searcResultUsers![index].friendshipRequestStatus!.name,
-                    onPressed: state.searcResultUsers![index]
-                                .friendshipRequestStatus ==
-                            FriendshipRequestStatus.Follow
-                        ? () {
-                            context.read<NewContactBloc>().add(
-                                  FollowSubmitted(state.searcResultUsers![index]
-                                      .userResponseDto!.id!),
-                                );
-                          }
-                        : null,
-                  ),
-                );
-              }),
-        );
-      },
-      buildWhen: (previous, current) =>
-          previous.isLoading != current.isLoading ||
-          previous.searcResultUsers != current.searcResultUsers,
-    );
+    return CircularProgressBlocBuilder<NewContactBloc, NewContactState,
+            NewContactEvent>(
+        getChild: (c, state) => ListView.builder(
+            itemCount: state.searcResultUsers!.length,
+            itemBuilder: (context, index) {
+              return ContactCard(
+                contact: SelectableModel(
+                    model: state.searcResultUsers![index].userResponseDto),
+                contactCardListTileTrailing: ContactCardListTileTrailing(
+                  buttonText: state
+                      .searcResultUsers![index].friendshipRequestStatus!.name,
+                  onPressed:
+                      state.searcResultUsers![index].friendshipRequestStatus ==
+                              FriendshipRequestStatus.Follow
+                          ? () {
+                              context.read<NewContactBloc>().add(
+                                    FollowSubmitted(state
+                                        .searcResultUsers![index]
+                                        .userResponseDto!
+                                        .id!),
+                                  );
+                            }
+                          : null,
+                ),
+              );
+            }),
+        buildWhen: (previous, current) =>
+            previous.searcResultUsers != current.searcResultUsers);
   }
 
   _scaffoldAppBar() {
