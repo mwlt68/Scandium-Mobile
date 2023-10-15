@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
+import 'package:scandium/core/init/bloc/extension/emitter_extension.dart';
 import 'package:scandium/core/init/bloc/model/base_bloc_dialog_model.dart';
 import 'package:scandium/product/hub/friendship_request_hub.dart';
 import 'package:scandium/product/models/base/user.dart';
@@ -59,25 +60,23 @@ class SelectContactBloc
 
   Future _onGetContacts(
     GetContactsEvent event,
-    Emitter<SelectContactState> emit,
+    Emitter<SelectContactState> emitter,
   ) async {
-    emitSetLoading(emit, true);
-    var result =
-        await _friendshipRequestRepository.getAll(isOnlyAccepted: true);
-    emitBaseState(
-      emit,
-      result,
-      whenSuccess: () {
-        if (_currentUser != null) {
-          var users = result!.value!
-              .where((element) =>
-                  element.sender != null && element.receiver != null)
-              .map((e) =>
-                  e.sender?.id == _currentUser!.id ? e.receiver! : e.sender!)
-              .toList();
-          emit(state.copyWith(users: users));
-        }
-      },
-    );
+    await emitter.emit(
+        state: state,
+        requestOperation:
+            _friendshipRequestRepository.getAll(isOnlyAccepted: true),
+        getSuccessfulState: (response) {
+          if (_currentUser != null) {
+            var users = response.value!
+                .where((element) =>
+                    element.sender != null && element.receiver != null)
+                .map((e) =>
+                    e.sender?.id == _currentUser!.id ? e.receiver! : e.sender!)
+                .toList();
+            return state.copyWith(users: users);
+          }
+          return null;
+        });
   }
 }

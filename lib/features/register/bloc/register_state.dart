@@ -7,6 +7,7 @@ class RegisterState extends BaseState<RegisterState> {
       this.password = const Password.pure(),
       this.passwordConfirm = const PasswordConfirmation.pure(),
       this.registered = false,
+      super.status,
       super.errorKeys,
       super.successfulKeys,
       super.warningKeys,
@@ -14,7 +15,7 @@ class RegisterState extends BaseState<RegisterState> {
 
   @override
   List<Object?> get subProps =>
-      [username, password, passwordConfirm, registered];
+      [username, password, passwordConfirm, registered, formStatus];
 
   final FormzStatus formStatus;
   final Username username;
@@ -42,6 +43,7 @@ class RegisterState extends BaseState<RegisterState> {
         successfulKeys: successfulKeys ?? this.successfulKeys,
         warningKeys: warningKeys ?? this.warningKeys,
         dialogModel: dialogModel ?? this.dialogModel,
+        status: status ?? this.status,
         registered: registered ?? this.registered);
   }
 

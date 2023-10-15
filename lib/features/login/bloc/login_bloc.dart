@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
+import 'package:scandium/core/init/bloc/extension/emitter_extension.dart';
 import 'package:scandium/core/init/bloc/model/base_bloc_dialog_model.dart';
 import 'package:scandium/features/login/models/password.dart';
 import 'package:scandium/features/login/models/username.dart';
@@ -44,14 +45,13 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
   }
 
   Future<void> _onSubmitted(
-      LoginSubmitted event, Emitter<LoginState> emit) async {
+      LoginSubmitted event, Emitter<LoginState> emitter) async {
     if (state.formStatus.isValidated) {
-      emit(state.copyWith(status: BaseStateStatus.loading));
-
-      var response = await _userRepository.authenticate(
-          username: state.username.value, password: state.password.value);
-
-      emitBaseState(emit, response);
+      await emitter.emit(
+        state: state,
+        requestOperation: _userRepository.authenticate(
+            username: state.username.value, password: state.password.value),
+      );
     }
   }
 }

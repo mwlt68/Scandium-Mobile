@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
+import 'package:scandium/core/init/bloc/extension/emitter_extension.dart';
 import 'package:scandium/core/init/bloc/model/base_bloc_dialog_model.dart';
 import 'package:scandium/features/register/models/password.dart';
 import 'package:scandium/features/register/models/password_confirmation.dart';
@@ -15,7 +16,7 @@ part 'register_state.dart';
 class RegisterBloc extends BaseBloc<RegisterEvent, RegisterState> {
   RegisterBloc({required UserRepository userRepository})
       : _userRepository = userRepository,
-        super(RegisterState()) {
+        super(RegisterState(status: BaseStateStatus.success)) {
     on<RegisterUsernameChanged>(_onUsernameChanged);
     on<RegisterPasswordChanged>(_onPasswordChanged);
     on<RegisterPasswordConfirmChanged>(_onPasswordConfirmationChanged);
@@ -74,15 +75,14 @@ class RegisterBloc extends BaseBloc<RegisterEvent, RegisterState> {
   }
 
   Future<void> _onSubmitted(
-      RegisterSubmitted event, Emitter<RegisterState> emit) async {
+      RegisterSubmitted event, Emitter<RegisterState> emitter) async {
     if (state.formStatus.isValidated) {
-      emit(state.copyWith(formStatus: FormzStatus.submissionInProgress));
-
-      var response = await _userRepository.register(state.username.value,
-          state.password.value, state.passwordConfirm.value);
-      emitBaseState(emit, response, whenSuccess: () {
-        emit(state.copyWith(registered: true));
-      });
+      await emitter.emit(
+        state: state,
+        requestOperation: _userRepository.register(state.username.value,
+            state.password.value, state.passwordConfirm.value),
+        getSuccessfulState: (response) => state.copyWith(registered: true),
+      );
     }
   }
 }

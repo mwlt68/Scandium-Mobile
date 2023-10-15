@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:scandium/core/extensions/list_extension.dart';
 import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
+import 'package:scandium/core/init/bloc/extension/emitter_extension.dart';
 import 'package:scandium/core/init/bloc/model/base_bloc_dialog_model.dart';
 import 'package:scandium/product/models/response/user_search_response_model.dart';
 import 'package:scandium/product/repositories/friendship_request/friendship_request_repository.dart';
@@ -26,44 +27,37 @@ class NewContactBloc extends BaseBloc<NewContactEvent, NewContactState> {
 
   Future _onSearchValueChange(
     SearchValueChanged event,
-    Emitter<NewContactState> emit,
+    Emitter<NewContactState> emitter,
   ) async {
-    emitSetLoading(emit, true);
-    var result = await _userRepository.searchUser(username: event.searchValue);
-    emitBaseState(
-      emit,
-      result,
-      whenSuccess: () {
-        emit(state.copyWith(
-            searchValue: event.searchValue, searcResultUsers: result!.value));
-      },
-    );
+    await emitter.emit(
+        state: state,
+        requestOperation:
+            _userRepository.searchUser(username: event.searchValue),
+        getSuccessfulState: (response) => state.copyWith(
+            searchValue: event.searchValue, searcResultUsers: response.value));
   }
 
   Future _onFollowSubmitted(
     FollowSubmitted event,
-    Emitter<NewContactState> emit,
+    Emitter<NewContactState> emitter,
   ) async {
     var otherUserFriendship = state.searcResultUsers
         .firstOrDefault((p0) => p0.receiverId == event.userId);
     if (otherUserFriendship == null) {
-      emitSetLoading(emit, true);
-      var result = await _friendshipRequestRepository.follow(event.userId);
-      emitBaseState(
-        emit,
-        result,
-        whenSuccess: () {
-          var searcResultUsers = List<UserSearchResponseModel>.from(
-              state.searcResultUsers ?? List.empty(growable: true));
-          var searcResultUser = searcResultUsers.firstOrDefault(
-              (p) => p.userResponseDto?.id == result!.value?.receiver?.id);
-          if (searcResultUser != null) {
-            searcResultUser.friendshipRequestStatus =
-                FriendshipRequestStatus.Requested;
-          }
-          emit(state.copyWith(searcResultUsers: searcResultUsers));
-        },
-      );
+      await emitter.emit(
+          state: state,
+          requestOperation: _friendshipRequestRepository.follow(event.userId),
+          getSuccessfulState: (response) {
+            var searcResultUsers = List<UserSearchResponseModel>.from(
+                state.searcResultUsers ?? List.empty(growable: true));
+            var searcResultUser = searcResultUsers.firstOrDefault(
+                (p) => p.userResponseDto?.id == response.value?.receiver?.id);
+            if (searcResultUser != null) {
+              searcResultUser.friendshipRequestStatus =
+                  FriendshipRequestStatus.Requested;
+            }
+            return state.copyWith(searcResultUsers: searcResultUsers);
+          });
     }
   }
 }

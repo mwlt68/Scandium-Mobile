@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:scandium/core/extensions/list_extension.dart';
 import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
+import 'package:scandium/core/init/bloc/extension/emitter_extension.dart';
 import 'package:scandium/core/init/bloc/model/base_bloc_dialog_model.dart';
 import 'package:scandium/product/hub/friendship_request_hub.dart';
 import 'package:scandium/product/models/response/friendship_response_model.dart';
@@ -41,33 +42,35 @@ class ContactRequestBloc
 
   Future _onGetRequestsEvent(
     GetRequestsEvent event,
-    Emitter<ContactRequestState> emit,
+    Emitter<ContactRequestState> emitter,
   ) async {
-    emitSetLoading(emit, true);
-    var result = await _friendshipRequestRepository.getAll();
-    emitBaseState(emit, result, whenSuccess: () {
-      emit(state.copyWith(friendshipResponses: result!.value));
-    });
+    await emitter.emit(
+        state: state,
+        requestOperation: _friendshipRequestRepository.getAll(),
+        getSuccessfulState: (response) =>
+            state.copyWith(friendshipResponses: response.value));
   }
 
   Future _onRequestApproveEvent(
     RequestApproveEvent event,
-    Emitter<ContactRequestState> emit,
+    Emitter<ContactRequestState> emitter,
   ) async {
-    emitSetLoading(emit, true);
-    var result =
-        await _friendshipRequestRepository.approve(event.friendshipRequestId);
-    emitBaseState(emit, result, whenSuccess: () {
-      if (state.friendshipResponses != null) {
-        var list =
-            List<FriendshipResponseModel>.from(state.friendshipResponses!);
-        var request =
-            list.firstOrDefault((p0) => p0.id == event.friendshipRequestId);
-        if (request != null) {
-          request.isApproved = true;
-          emit(state.copyWith(friendshipResponses: list));
-        }
-      }
-    });
+    await emitter.emit(
+        state: state,
+        requestOperation:
+            _friendshipRequestRepository.approve(event.friendshipRequestId),
+        getSuccessfulState: (response) {
+          if (state.friendshipResponses != null) {
+            var list =
+                List<FriendshipResponseModel>.from(state.friendshipResponses!);
+            var request =
+                list.firstOrDefault((p0) => p0.id == event.friendshipRequestId);
+            if (request != null) {
+              request.isApproved = true;
+              return state.copyWith(friendshipResponses: list);
+            }
+          }
+          return state;
+        });
   }
 }

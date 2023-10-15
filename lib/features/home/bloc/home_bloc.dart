@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
+import 'package:scandium/core/init/bloc/extension/emitter_extension.dart';
 import 'package:scandium/core/init/bloc/model/base_bloc_dialog_model.dart';
 import 'package:scandium/product/hub/message_hub.dart';
 import 'package:scandium/product/models/response/message_response_model.dart';
@@ -39,17 +40,13 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
 
   Future _onLoadHome(
     LoadHomeEvent event,
-    Emitter<HomeState> emit,
+    Emitter<HomeState> emitter,
   ) async {
-    emitSetLoading(emit, true);
-    final messagesResponse = await _messageRepository.getLastMessages();
-    emitBaseState(
-      emit,
-      messagesResponse,
-      whenSuccess: () {
-        emit(state.copyWith(messages: messagesResponse!.value!));
-      },
-    );
+    await emitter.emit(
+        state: state,
+        requestOperation: _messageRepository.getLastMessages(),
+        getSuccessfulState: (messagesResponse) =>
+            state.copyWith(messages: messagesResponse.value!));
   }
 
   Future _onMessageReceiveEvent(

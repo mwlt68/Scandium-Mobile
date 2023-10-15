@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_guid/flutter_guid.dart';
 import 'package:scandium/core/extensions/list_extension.dart';
 import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
+import 'package:scandium/core/init/bloc/extension/emitter_extension.dart';
 import 'package:scandium/core/init/bloc/model/base_bloc_dialog_model.dart';
 import 'package:scandium/product/hub/message_hub.dart';
 import 'package:scandium/product/models/response/conversation_reponse_model.dart';
@@ -45,20 +46,18 @@ class ChatBloc extends BaseBloc<ChatEvent, ChatState> {
   }
 
   Future _onGetConversation(
-      GetConversationEvent event, Emitter<ChatState> emit) async {
-    emit(state.copyWith(status: BaseStateStatus.loading));
-    var conversationResponse =
-        await _messageRepository.getConversation(event.otherUserId);
-    emitBaseState(emit, conversationResponse, whenSuccess: () {
-      emit(state.copyWith(
-          messages: conversationResponse!.value!.messages,
-          otherUser: conversationResponse.value!.otherUser,
-          currentUser: conversationResponse.value!.currentUser));
-    });
+      GetConversationEvent event, Emitter<ChatState> emitter) async {
+    await emitter.emit(
+        state: state,
+        requestOperation: _messageRepository.getConversation(event.otherUserId),
+        getSuccessfulState: (response) => state.copyWith(
+            messages: response.value!.messages,
+            otherUser: response.value!.otherUser,
+            currentUser: response.value!.currentUser));
   }
 
   Future _onSendMessageEvent(
-      SendMessageEvent event, Emitter<ChatState> emit) async {
+      SendMessageEvent event, Emitter<ChatState> emitter) async {
     if (state.status != BaseStateStatus.loading && event.content != null) {
       var id = Guid.newGuid.toString();
       var messages = List<ConversationMessageModel>.from(state.messages);
@@ -79,9 +78,9 @@ class ChatBloc extends BaseBloc<ChatEvent, ChatState> {
         if (message != null) {
           message.didTransmit = true;
         }
-        emit(state.copyWith(messages: messages, content: ''));
+        emitter(state.copyWith(messages: messages, content: ''));
       } else {
-        emitErrorKeys(emit, conversationResponse?.errorContents);
+        emitter.emitErrorKeys(state, conversationResponse?.errorContents);
       }
     }
   }
