@@ -49,13 +49,12 @@ class ChatBloc extends BaseBloc<ChatEvent, ChatState> {
     emit(state.copyWith(status: BaseStateStatus.loading));
     var conversationResponse =
         await _messageRepository.getConversation(event.otherUserId);
-    var isSuccessful = emitBaseState(emit, conversationResponse);
-    if (isSuccessful) {
+    emitBaseState(emit, conversationResponse, whenSuccess: () {
       emit(state.copyWith(
           messages: conversationResponse!.value!.messages,
           otherUser: conversationResponse.value!.otherUser,
           currentUser: conversationResponse.value!.currentUser));
-    }
+    });
   }
 
   Future _onSendMessageEvent(

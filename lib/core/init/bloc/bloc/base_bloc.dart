@@ -12,15 +12,17 @@ class BaseBloc<TEvent extends BaseEvent, TState extends BaseState<TState>>
     extends Bloc<TEvent, TState> {
   BaseBloc(super.initialState);
 
-  bool emitBaseState<T extends IFromMappable>(
-      Emitter<TState> emit, SingleBaseResponseModel<T>? response) {
+  bool emitBaseState<T extends IFromMappable, R extends BaseResponseModel<T>>(
+      Emitter<TState> emit, R? response,
+      {void Function()? whenSuccess}) {
     if (response == null) {
       emit(state.copyWithBase(
           status: BaseStateStatus.success,
           errorKeys: const ["ConnectionError"]));
-    } else if (response.value != null && response.hasNotError) {
+    } else if (!response.isValueNull() && response.hasNotError) {
       emit(state
           .copyWithBase(status: BaseStateStatus.success, errorKeys: const []));
+      if (whenSuccess != null) whenSuccess();
       return true;
     } else {
       emit(state.copyWithBase(
@@ -37,5 +39,11 @@ class BaseBloc<TEvent extends BaseEvent, TState extends BaseState<TState>>
         status: BaseStateStatus.success,
         errorKeys: errorContents?.map((e) => e.title!).toList() ??
             [ApplicationConstants.instance.unexpectedErrorDefaultMessage]));
+  }
+
+  void emitSetLoading(Emitter<TState> emit, bool isLoading) {
+    emit(state.copyWithBase(
+      status: isLoading ? BaseStateStatus.loading : BaseStateStatus.success,
+    ));
   }
 }

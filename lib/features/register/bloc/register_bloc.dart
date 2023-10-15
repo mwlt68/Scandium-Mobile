@@ -80,10 +80,9 @@ class RegisterBloc extends BaseBloc<RegisterEvent, RegisterState> {
 
       var response = await _userRepository.register(state.username.value,
           state.password.value, state.passwordConfirm.value);
-      bool isSuccessful = emitBaseState(emit, response);
-      if (isSuccessful) {
+      emitBaseState(emit, response, whenSuccess: () {
         emit(state.copyWith(registered: true));
-      }
+      });
     }
   }
 }
