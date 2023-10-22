@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:scandium/core/init/extension/string_extension.dart';
+import 'package:scandium/core/init/locale_keys.g.dart';
 import 'package:scandium/features/login/bloc/login_bloc.dart';
 import 'package:scandium/features/register/view/register_page.dart';
 import 'package:scandium/product/widgets/progress_indicators/circular_progress_bloc_builder.dart';
@@ -37,9 +39,10 @@ class _UsernameInput extends StatelessWidget {
           onChanged: (username) =>
               context.read<LoginBloc>().add(LoginUsernameChanged(username)),
           decoration: InputDecoration(
-              labelText: _values.usernameLabelText,
-              errorText:
-                  state.username.invalid ? _values.usernameErrorText : null),
+              labelText: LocaleKeys.pages_login_usernameLabelText.lcl,
+              errorText: state.username.invalid
+                  ? LocaleKeys.pages_login_usernameErrorText.lcl
+                  : null),
         );
       },
       buildWhen: (previous, current) => previous.username != current.username,
@@ -59,9 +62,10 @@ class _PasswordInput extends StatelessWidget {
           onChanged: (password) =>
               context.read<LoginBloc>().add(LoginPasswordChanged(password)),
           decoration: InputDecoration(
-              labelText: _values.passwordLabelText,
-              errorText:
-                  state.username.invalid ? _values.passwordErrorText : null),
+              labelText: LocaleKeys.pages_login_passwordLabelText.lcl,
+              errorText: state.username.invalid
+                  ? LocaleKeys.pages_login_passwordErrorText.lcl
+                  : null),
           obscureText: true,
         );
       },
@@ -90,7 +94,10 @@ class _LoginOrRegister extends StatelessWidget {
   Row _registerRow(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [Text(_values.registerInfoText), _registerButton(context)],
+      children: [
+        Text(LocaleKeys.pages_login_registerInfoText.lcl),
+        _registerButton(context)
+      ],
     );
   }
 
@@ -101,7 +108,7 @@ class _LoginOrRegister extends StatelessWidget {
               MaterialPageRoute(builder: (context) => const RegisterPage()),
               (route) => false);
         },
-        child: Text(_values.registerPageButtonText));
+        child: Text(LocaleKeys.pages_login_registerPageButtonText.lcl));
   }
 
   ElevatedButton _loginButton(LoginState state, BuildContext context) {
@@ -109,7 +116,7 @@ class _LoginOrRegister extends StatelessWidget {
       onPressed: state.formStatus.isValidated
           ? () => context.read<LoginBloc>().add(const LoginSubmitted())
           : null,
-      child: Text(_values.loginButtonText),
+      child: Text(LocaleKeys.pages_login_loginButtonText.lcl),
     );
   }
 }
