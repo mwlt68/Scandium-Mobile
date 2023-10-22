@@ -5,8 +5,9 @@ import 'package:scandium/product/models/base/selectable_model.dart';
 import 'package:scandium/product/models/response/user_search_response_model.dart';
 import 'package:scandium/product/repositories/friendship_request/friendship_request_repository.dart';
 import 'package:scandium/product/repositories/user/user_repository.dart';
-import 'package:scandium/product/widgets/conditional_circular_progress.dart';
-import 'package:scandium/product/widgets/contact_card.dart';
+import 'package:scandium/product/widgets/cards/contact_card.dart';
+import 'package:scandium/product/widgets/progress_indicators/circular_progress_bloc_builder.dart';
+import 'package:scandium/product/widgets/scaffold/base_scaffold_bloc.dart';
 
 class NewContactPage extends StatefulWidget {
   const NewContactPage({super.key});
@@ -20,31 +21,12 @@ class _NewContactPageState extends State<NewContactPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BaseScaffoldBlocListener<NewContactBloc, NewContactState,
+            NewContactEvent>(
         create: (context) => NewContactBloc(
             userRepository: RepositoryProvider.of<UserRepository>(context),
             friendshipRequestRepository:
                 RepositoryProvider.of<FriendshipRequestRepository>(context)),
-        child: _blocListener());
-  }
-
-  BlocListener<NewContactBloc, NewContactState> _blocListener() {
-    return BlocListener<NewContactBloc, NewContactState>(
-        listener: (context, state) {
-          if (state.errorMessage != null) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(SnackBar(content: Text(state.errorMessage!)));
-          }
-          if (state.successMessage != null) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(SnackBar(
-                content: Text(state.successMessage!),
-                backgroundColor: Colors.green,
-              ));
-          }
-        },
         child: Scaffold(
           appBar: _scaffoldAppBar(),
           body: _scaffoldBody(),
@@ -52,36 +34,34 @@ class _NewContactPageState extends State<NewContactPage> {
   }
 
   _scaffoldBody() {
-    return BlocBuilder<NewContactBloc, NewContactState>(
-      builder: (context, state) {
-        return ConditionalCircularProgress(
-          isLoading: state.isLoading,
-          child: ListView.builder(
-              itemCount: state.searcResultUsers!.length,
-              itemBuilder: (context, index) {
-                return ContactCard(
-                  contact: SelectableModel(
-                      model: state.searcResultUsers![index].userResponseDto),
-                  contactCardListTileTrailing: ContactCardListTileTrailing(
-                    buttonText: state
-                        .searcResultUsers![index].friendshipRequestStatus!.name,
-                    onPressed: state.searcResultUsers![index]
-                                .friendshipRequestStatus ==
-                            FriendshipRequestStatus.Follow
-                        ? () {
-                            context.read<NewContactBloc>().add(
-                                  FollowSubmitted(state.searcResultUsers![index]
-                                      .userResponseDto!.id!),
-                                );
-                          }
-                        : null,
-                  ),
-                );
-              }),
-        );
-      },
-      buildWhen: (previous, current) => previous.isLoading != current.isLoading,
-    );
+    return CircularProgressBlocBuilder<NewContactBloc, NewContactState,
+            NewContactEvent>(
+        getChild: (c, state) => ListView.builder(
+            itemCount: state.searcResultUsers!.length,
+            itemBuilder: (context, index) {
+              return ContactCard(
+                contact: SelectableModel(
+                    model: state.searcResultUsers![index].userResponseDto),
+                contactCardListTileTrailing: ContactCardListTileTrailing(
+                  buttonText: state
+                      .searcResultUsers![index].friendshipRequestStatus!.name,
+                  onPressed:
+                      state.searcResultUsers![index].friendshipRequestStatus ==
+                              FriendshipRequestStatus.Follow
+                          ? () {
+                              context.read<NewContactBloc>().add(
+                                    FollowSubmitted(state
+                                        .searcResultUsers![index]
+                                        .userResponseDto!
+                                        .id!),
+                                  );
+                            }
+                          : null,
+                ),
+              );
+            }),
+        buildWhen: (previous, current) =>
+            previous.searcResultUsers != current.searcResultUsers);
   }
 
   _scaffoldAppBar() {

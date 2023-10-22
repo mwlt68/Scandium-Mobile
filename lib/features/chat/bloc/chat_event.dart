@@ -1,6 +1,6 @@
 part of 'chat_bloc.dart';
 
-class ChatEvent extends Equatable {
+class ChatEvent extends BaseEvent {
   const ChatEvent();
 
   @override

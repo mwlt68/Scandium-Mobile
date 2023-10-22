@@ -1,6 +1,6 @@
 part of 'select_contact_bloc.dart';
 
-class SelectContactEvent extends Equatable {
+class SelectContactEvent extends BaseEvent {
   const SelectContactEvent();
 
   @override

@@ -1,6 +1,6 @@
 part of 'contact_request_bloc.dart';
 
-abstract class ContactRequestEvent extends Equatable {
+abstract class ContactRequestEvent extends BaseEvent {
   const ContactRequestEvent();
 
   @override

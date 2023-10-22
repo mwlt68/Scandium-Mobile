@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scandium/features/contact/select_contact/view/select_contact_page.dart';
 import 'package:scandium/features/home/bloc/home_bloc.dart';
-import 'package:scandium/product/widgets/custom_card.dart';
+import 'package:scandium/product/widgets/cards/custom_card.dart';
 
 class ChatListPage extends StatefulWidget {
   const ChatListPage({Key? key}) : super(key: key);

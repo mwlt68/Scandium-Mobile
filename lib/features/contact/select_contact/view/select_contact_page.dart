@@ -6,60 +6,41 @@ import 'package:scandium/features/contact/select_contact/bloc/select_contact_blo
 import 'package:scandium/product/models/base/selectable_model.dart';
 import 'package:scandium/product/repositories/friendship_request/friendship_request_repository.dart';
 import 'package:scandium/product/repositories/user/user_repository.dart';
-import 'package:scandium/product/widgets/button_card.dart';
-import 'package:scandium/product/widgets/conditional_circular_progress.dart';
-import 'package:scandium/product/widgets/contact_card.dart';
-
+import 'package:scandium/product/widgets/cards/button_card.dart';
+import 'package:scandium/product/widgets/cards/contact_card.dart';
+import 'package:scandium/product/widgets/progress_indicators/circular_progress_bloc_builder.dart';
+import 'package:scandium/product/widgets/scaffold/base_scaffold_bloc.dart';
 import '../../contact_request/view/contact_request_page.dart';
 
-class SelectContactPage extends StatefulWidget {
+class SelectContactPage extends StatelessWidget {
   const SelectContactPage({Key? key}) : super(key: key);
 
   @override
-  _SelectContactPageState createState() => _SelectContactPageState();
-}
-
-class _SelectContactPageState extends State<SelectContactPage> {
-  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BaseScaffoldBlocListener<SelectContactBloc, SelectContactState,
+            SelectContactEvent>(
         create: (context) => SelectContactBloc(
             userRepository: RepositoryProvider.of<UserRepository>(context),
             friendshipRequestRepository:
                 RepositoryProvider.of<FriendshipRequestRepository>(context))
           ..add(GetContactsEvent()),
-        child: _blocListener());
-  }
-
-  BlocListener<SelectContactBloc, SelectContactState> _blocListener() {
-    return BlocListener<SelectContactBloc, SelectContactState>(
-        listener: (context, state) {
-          if (state.errorMessage != null) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(SnackBar(content: Text(state.errorMessage!)));
-          }
-        },
         child: Scaffold(appBar: _appBar(context), body: _body()));
   }
 
   Widget _body() {
-    return BlocBuilder<SelectContactBloc, SelectContactState>(
-      builder: (context, state) {
-        return ConditionalCircularProgress(
-          isLoading: state.isLoading,
-          child: ListView.builder(
-              itemCount: state.users!.length + 2,
-              itemBuilder: (context, index) {
-                if (index == 0) {
-                  return _newGroupCard();
-                } else if (index == 1) {
-                  return _newContactCard(context);
-                }
-                return _listViewContactCard(state, index, context);
-              }),
-        );
-      },
+    return CircularProgressBlocBuilder<SelectContactBloc, SelectContactState,
+        SelectContactEvent>(
+      getChild: (c, s) => ListView.builder(
+          itemCount: s.users!.length + 2,
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              return _newGroupCard();
+            } else if (index == 1) {
+              return _newContactCard(context);
+            }
+            return _listViewContactCard(s, index, context);
+          }),
+      buildWhen: (p, c) => p.users != c.users,
     );
   }
 
@@ -132,7 +113,7 @@ class _SelectContactPageState extends State<SelectContactPage> {
 
   _followRequestsButtonOnPressed(BuildContext context) async {
     Navigator.push(context,
-            MaterialPageRoute(builder: (builder) => const ContactRequestPage()))
+            MaterialPageRoute(builder: (builder) => ContactRequestPage()))
         .then((value) {
       context.read<SelectContactBloc>().add(GetContactsEvent());
     });

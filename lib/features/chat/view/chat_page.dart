@@ -7,53 +7,36 @@ import 'package:scandium/product/constants/application_constants.dart';
 import 'package:scandium/product/models/response/conversation_reponse_model.dart';
 import 'package:scandium/product/models/response/user_response_model.dart';
 import 'package:scandium/product/repositories/message/message_repository.dart';
-import 'package:scandium/product/widgets/conditional_circular_progress.dart';
+import 'package:scandium/product/widgets/progress_indicators/circular_progress_bloc_builder.dart';
+import 'package:scandium/product/widgets/scaffold/base_scaffold_bloc.dart';
 import 'package:sticky_grouped_list/sticky_grouped_list.dart';
 
-class ChatPage extends StatefulWidget {
-  const ChatPage({required this.otherUserId, super.key});
+class ChatPage extends StatelessWidget {
+  ChatPage({required this.otherUserId, super.key});
   final String otherUserId;
-  @override
-  State<ChatPage> createState() => _ChatPageState();
-}
-
-class _ChatPageState extends State<ChatPage> {
   final GroupedItemScrollController _scrollController =
       GroupedItemScrollController();
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ChatBloc(
-          messageRepository: RepositoryProvider.of<MessageRepository>(context))
-        ..add(GetConversationEvent(widget.otherUserId)),
-      child: _blocListener(),
-    );
+    return BaseScaffoldBlocListener<ChatBloc, ChatState, ChatEvent>(
+        create: (context) => ChatBloc(
+            messageRepository:
+                RepositoryProvider.of<MessageRepository>(context))
+          ..add(GetConversationEvent(otherUserId)),
+        child: Scaffold(
+          appBar: _appBar(context),
+          body: _body(),
+        ));
   }
 
-  _blocListener() {
-    return BlocListener<ChatBloc, ChatState>(
-      listener: (context, state) {
-        if (state.error != null) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: Text(state.error!)));
-        }
-      },
-      child: Scaffold(
-        appBar: _appBar(),
-        body: _body(),
-      ),
-    );
-  }
-
-  _appBar() {
+  _appBar(BuildContext context) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(60),
       child: AppBar(
         leadingWidth: 70,
         titleSpacing: 0,
-        leading: _appBarLeading,
+        leading: _appBarLeading(context),
         title: _appBarTitle,
         actions: _appBarActions,
       ),
@@ -119,39 +102,33 @@ class _ChatPageState extends State<ChatPage> {
       ];
 
   Widget get _appBarTitle => InkWell(
-        onTap: () {},
-        child: Container(
-          margin: const EdgeInsets.all(6),
-          child: BlocBuilder<ChatBloc, ChatState>(
-            builder: (context, state) {
-              return ConditionalCircularProgress(
-                  isLoading: state.isLoading,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        state.otherUser?.username ??
-                            ApplicationConstants.instance.emptyFieldText,
-                        style: const TextStyle(
-                          fontSize: 18.5,
-                          fontWeight: FontWeight.bold,
-                        ),
+      onTap: () {},
+      child: Container(
+        margin: const EdgeInsets.all(6),
+        child: CircularProgressBlocBuilder<ChatBloc, ChatState, ChatEvent>(
+            getChild: (c, state) => Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      state.otherUser?.username ??
+                          ApplicationConstants.instance.emptyFieldText,
+                      style: const TextStyle(
+                        fontSize: 18.5,
+                        fontWeight: FontWeight.bold,
                       ),
-                      const Text(
-                        "today at 12:05",
-                        style: TextStyle(
-                          fontSize: 13,
-                        ),
-                      )
-                    ],
-                  ));
-            },
-          ),
-        ),
-      );
+                    ),
+                    const Text(
+                      "today at 12:05",
+                      style: TextStyle(
+                        fontSize: 13,
+                      ),
+                    )
+                  ],
+                )),
+      ));
 
-  Widget get _appBarLeading => InkWell(
+  Widget _appBarLeading(BuildContext context) => InkWell(
         onTap: () {
           Navigator.pop(context);
         },
@@ -265,7 +242,7 @@ class _ChatPageState extends State<ChatPage> {
               showModalBottomSheet(
                   backgroundColor: Colors.transparent,
                   context: context,
-                  builder: (builder) => bottomSheet());
+                  builder: (builder) => bottomSheet(context));
             },
           ),
           IconButton(
@@ -349,7 +326,7 @@ class _ChatPageState extends State<ChatPage> {
         isOwnCard: element.senderIsCurrentUser(currentUser.id!));
   }
 
-  Widget bottomSheet() {
+  Widget bottomSheet(BuildContext context) {
     return SizedBox(
       height: 278,
       width: MediaQuery.of(context).size.width,

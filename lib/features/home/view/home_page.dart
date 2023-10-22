@@ -4,6 +4,8 @@ import 'package:scandium/features/home/bloc/home_bloc.dart';
 import 'package:scandium/features/home/view/chat_list_page.dart';
 import 'package:scandium/product/repositories/message/message_repository.dart';
 import 'package:scandium/product/repositories/user/user_repository.dart';
+import 'package:scandium/product/widgets/progress_indicators/circular_progress_bloc_builder.dart';
+import 'package:scandium/product/widgets/scaffold/base_scaffold_bloc.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -28,38 +30,29 @@ class _HomePageState extends State<HomePage>
   late TabController _controller;
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => HomeBloc(
-          userRepository: RepositoryProvider.of<UserRepository>(context),
-          messageRepository: RepositoryProvider.of<MessageRepository>(context))
-        ..add(LoadHomeEvent()),
-      child: Scaffold(
-        appBar: _scaffoldAppBar(),
-        body: _scaffoldBody(context),
-      ),
-    );
+    return BaseScaffoldBlocListener<HomeBloc, HomeState, HomeEvent>(
+        create: (context) => HomeBloc(
+            userRepository: RepositoryProvider.of<UserRepository>(context),
+            messageRepository:
+                RepositoryProvider.of<MessageRepository>(context))
+          ..add(LoadHomeEvent()),
+        child: Scaffold(
+          appBar: _scaffoldAppBar(),
+          body: _scaffoldBody(context),
+        ));
   }
 
   Widget _scaffoldBody(BuildContext context) {
-    return BlocBuilder<HomeBloc, HomeState>(
-      builder: (context, state) {
-        if (state.isLoading) {
-          return const CircularProgressIndicator();
-        } else if (state.error != null) {
-          return Text(state.error ?? 'Unknown error !');
-        } else {
-          return TabBarView(
-            controller: _controller,
-            children: const [
-              Text("CAMERA"),
-              ChatListPage(),
-              Text("STATUS"),
-              Text("CALLS"),
-            ],
-          );
-        }
-      },
-    );
+    return CircularProgressBlocBuilder<HomeBloc, HomeState, HomeEvent>(
+        getChild: (c, s) => TabBarView(
+              controller: _controller,
+              children: const [
+                Text("CAMERA"),
+                ChatListPage(),
+                Text("STATUS"),
+                Text("CALLS"),
+              ],
+            ));
   }
 
   PreferredSize _scaffoldAppBar() => PreferredSize(

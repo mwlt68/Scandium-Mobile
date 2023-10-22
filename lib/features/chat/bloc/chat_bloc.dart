@@ -1,7 +1,9 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter_guid/flutter_guid.dart';
 import 'package:scandium/core/extensions/list_extension.dart';
+import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
+import 'package:scandium/core/init/bloc/extension/emitter_extension.dart';
+import 'package:scandium/core/init/bloc/model/base_bloc_dialog_model.dart';
 import 'package:scandium/product/hub/message_hub.dart';
 import 'package:scandium/product/models/response/conversation_reponse_model.dart';
 import 'package:scandium/product/models/response/message_response_model.dart';
@@ -11,10 +13,10 @@ import 'package:scandium/product/repositories/message/message_repository.dart';
 part 'chat_event.dart';
 part 'chat_state.dart';
 
-class ChatBloc extends Bloc<ChatEvent, ChatState> {
+class ChatBloc extends BaseBloc<ChatEvent, ChatState> {
   ChatBloc({required MessageRepository messageRepository})
       : _messageRepository = messageRepository,
-        super(ChatState(isLoading: true)) {
+        super(ChatState()) {
     on<GetConversationEvent>(_onGetConversation);
     on<SendMessageEvent>(_onSendMessageEvent);
     on<ContentChangedEvent>(_onContentChangedEvent);
@@ -44,25 +46,19 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   Future _onGetConversation(
-      GetConversationEvent event, Emitter<ChatState> emit) async {
-    emit(state.copyWith(isLoading: true));
-    var conversationResponse =
-        await _messageRepository.getConversation(event.otherUserId);
-    if (conversationResponse?.value != null &&
-        conversationResponse!.hasNotError) {
-      emit(state.copyWith(
-          messages: conversationResponse.value!.messages,
-          otherUser: conversationResponse.value!.otherUser,
-          currentUser: conversationResponse.value!.currentUser));
-    } else {
-      emit(state.copyWith(error: conversationResponse?.errorMessage));
-    }
-    emit(state.copyWith(isLoading: false));
+      GetConversationEvent event, Emitter<ChatState> emitter) async {
+    await emitter.emit(
+        state: state,
+        requestOperation: _messageRepository.getConversation(event.otherUserId),
+        getSuccessfulState: (response) => state.copyWith(
+            messages: response.value!.messages,
+            otherUser: response.value!.otherUser,
+            currentUser: response.value!.currentUser));
   }
 
   Future _onSendMessageEvent(
-      SendMessageEvent event, Emitter<ChatState> emit) async {
-    if (!state.isLoading && event.content != null) {
+      SendMessageEvent event, Emitter<ChatState> emitter) async {
+    if (state.status != BaseStateStatus.loading && event.content != null) {
       var id = Guid.newGuid.toString();
       var messages = List<ConversationMessageModel>.from(state.messages);
 
@@ -82,9 +78,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         if (message != null) {
           message.didTransmit = true;
         }
-        emit(state.copyWith(messages: messages, content: ''));
+        emitter(state.copyWith(messages: messages, content: ''));
       } else {
-        emit(state.copyWith(error: conversationResponse?.errorMessage));
+        emitter.emitErrorKeys(state, conversationResponse?.errorContents);
       }
     }
   }
