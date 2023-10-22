@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scandium/core/init/extension/string_extension.dart';
+import 'package:scandium/core/init/locale_keys.g.dart';
 import 'package:scandium/features/contact/contact_request/bloc/contact_request_bloc.dart';
 import 'package:scandium/product/models/base/selectable_model.dart';
 import 'package:scandium/product/repositories/friendship_request/friendship_request_repository.dart';
@@ -33,7 +35,7 @@ class ContactRequestPage extends StatelessWidget {
       hasMessage: (state) =>
           state.friendshipResponses == null ||
           state.friendshipResponses!.isEmpty,
-      message: 'You have no friend requests',
+      message: LocaleKeys.pages_contactRequest_noDataMessage.lcl,
       buildWhen: (previous, current) =>
           previous.friendshipResponses != current.friendshipResponses,
     );
@@ -48,8 +50,8 @@ class ContactRequestPage extends StatelessWidget {
                 model: state.friendshipResponses![index].sender),
             contactCardListTileTrailing: ContactCardListTileTrailing(
               buttonText: state.friendshipResponses![index].isApproved!
-                  ? "Following"
-                  : "Approve",
+                  ? LocaleKeys.pages_contactRequest_following.lcl
+                  : LocaleKeys.pages_contactRequest_approve.lcl,
               onPressed: state.friendshipResponses![index].isApproved!
                   ? null
                   : () {
@@ -65,7 +67,7 @@ class ContactRequestPage extends StatelessWidget {
 
   _scaffoldAppBar() {
     return AppBar(
-      title: const Text('Follow requests'),
+      title: Text(LocaleKeys.pages_contactRequest_followRequestText.lcl),
     );
   }
 }

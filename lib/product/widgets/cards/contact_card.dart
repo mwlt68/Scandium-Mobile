@@ -1,6 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:scandium/core/init/extension/string_extension.dart';
+import 'package:scandium/core/init/locale_keys.g.dart';
+import 'package:scandium/product/constants/application_constants.dart';
 import 'package:scandium/product/models/base/selectable_model.dart';
 import 'package:scandium/product/models/response/user_response_model.dart';
 
@@ -52,15 +55,15 @@ class ContactCard extends StatelessWidget {
           ),
         ),
         title: Text(
-          contact.model?.username ?? '',
+          contact.model?.username ?? ApplicationConstants.instance.empty,
           style: const TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.bold,
           ),
         ),
-        subtitle: const Text(
-          'Status',
-          style: TextStyle(
+        subtitle: Text(
+          LocaleKeys.widgets_statusText.lcl,
+          style: const TextStyle(
             fontSize: 13,
           ),
         ),
