@@ -1,0 +1,76 @@
+{
+    "apiKeys": {
+        "usernameNotUnique": "Username must be unique !",
+        "alreadyFriend": "This user is already your friend!"
+    },
+    "generals":{
+        "ok":"Ok",
+        "emptyFieldText":"This field cannot be left blank !",
+        "unexpectedErrorDefaultMessage":"Unexpected error occured !"
+    },
+    "widgets":{
+        "statusText":"Status",
+        "senderText":"Sender"
+    },
+    "pages":{
+        "login":{
+            "pageTitle":"Login",
+            "usernameLabelText":"Username",
+            "usernameErrorText":"Username invalid",
+            "passwordLabelText":"Password",
+            "passwordErrorText" :"Password invalid",
+            "registerPageButtonText":"Register",
+            "loginButtonText":"Login",
+            "registerInfoText":"Do not have an account ?",
+            "usernameValidationText":"Username can consist of 7 alphanumeric characters.",
+            "passwordValidationText":"Passsword contain at least one uppercase letter, one lowercase letter and one number."
+        },
+        "register":{
+            "pageTitle":"Register",
+            "usernameLabelText":"Username",
+            "passwordLabelText":"Password",
+            "registerPageButtonText":"Register",
+            "passwordConfirmationLabelText":"Password Confirmation",
+            "loginButtonText":"Login",
+            "registerInfoText":"Do you have an account ?",
+            "registrationSuccessfulText":"Registration successful please login.",
+            "passwordConfirmDoesnotMatch":"Password confirmation does not match with your password."
+        },
+        "home":{
+            "cameraTab" : "CAMERA",
+            "statusTab" : "STATUS",
+            "callsTab" : "CALLS",
+            "chatsTab" : "CHATS",
+            "logOut" : "Log Out"
+
+        },
+        "selectContact":{
+            "pageTitle": "Select Contact",
+            "contactCountText":"{} contacts",
+            "newContact":"New contact",
+            "newGroup":"New group"
+        },
+        "newContact":{
+            "searchLabelText": "Search by username"
+        },
+        "contactRequest":{
+            "noDataMessage":"You have no friend requests",
+            "following":"Following",
+            "approve":"Approve",
+            "followRequestText":"Follow requests"
+        },
+        "chat":{
+            "viewContact":"View Contact",
+            "lastSeenMessage":"today at 12:05",
+            "messageInputHintText":"Type a message",
+            "document":"Document",
+            "camera":"Camera",
+            "gallary":"Gallery",
+            "audio":"Audio",
+            "location":"Location",
+            "contact":"Contact"
+        }
+
+    }
+    
+}

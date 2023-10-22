@@ -1,0 +1,73 @@
+{
+    "apiKeys": {
+        "usernameNotUnique": "Kullanıcı adı benzersiz olmalıdır!",
+        "alreadyFriend": "Bu kullanıcı zaten arkadaşınız!"
+    },
+    "generals": {
+        "ok": "Tamam",
+        "emptyFieldText": "Bu alan boş bırakılamaz!",
+        "unexpectedErrorDefaultMessage": "Beklenmeyen bir hata oluştu!"
+    },
+    "widgets": {
+        "statusText": "Durum",
+        "senderText": "Gönderen"
+    },
+    "pages": {
+        "login": {
+            "pageTitle": "Giriş",
+            "usernameLabelText": "Kullanıcı Adı",
+            "usernameErrorText": "Geçersiz kullanıcı adı",
+            "passwordLabelText": "Şifre",
+            "passwordErrorText": "Geçersiz şifre",
+            "registerPageButtonText": "Kaydol",
+            "loginButtonText": "Giriş",
+            "registerInfoText": "Hesabınız yok mu?",
+            "usernameValidationText": "Kullanıcı adı 7 alfasayısal karakterden oluşabilir.",
+            "passwordValidationText": "Şifre en az bir büyük harf, bir küçük harf ve bir rakam içermelidir."
+        },
+        "register": {
+            "pageTitle": "Kayıt Ol",
+            "usernameLabelText": "Kullanıcı Adı",
+            "passwordLabelText": "Şifre",
+            "registerPageButtonText": "Kaydol",
+            "passwordConfirmationLabelText": "Şifre Onayı",
+            "loginButtonText": "Giriş",
+            "registerInfoText": "Hesabınız var mı?",
+            "registrationSuccessfulText": "Kayıt işlemi başarılı, lütfen giriş yapın.",
+            "passwordConfirmDoesnotMatch": "Şifre onayı şifrenizle eşleşmiyor."
+        },
+        "home": {
+            "cameraTab": "KAMERA",
+            "statusTab": "DURUM",
+            "callsTab": "ARAMALAR",
+            "chatsTab": "SOHBETLER",
+            "logOut": "Çıkış Yap"
+        },
+        "selectContact": {
+            "pageTitle": "Kişi Seç",
+            "contactCountText": "{} kişi",
+            "newContact": "Yeni kişi",
+            "newGroup": "Yeni grup"
+        },
+        "newContact": {
+            "searchLabelText": "Kullanıcı adına göre ara"
+        },
+        "contactRequest": {
+            "noDataMessage": "Arkadaşlık isteğiniz yok",
+            "following": "Takip ediliyor",
+            "approve": "Onayla",
+            "followRequestText": "Takip istekleri"
+        },
+        "chat": {
+            "viewContact": "Kişiyi Görüntüle",
+            "lastSeenMessage": "bugün saat 12:05'te",
+            "messageInputHintText": "Bir mesaj yazın",
+            "document": "Belge",
+            "camera": "Kamera",
+            "gallery": "Galeri",
+            "audio": "Ses",
+            "location": "Konum",
+            "contact": "Kişi"
+        }
+    }
+}
