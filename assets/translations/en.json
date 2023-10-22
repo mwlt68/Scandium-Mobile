@@ -1,7 +1,8 @@
 {
     "apiKeys": {
         "usernameNotUnique": "Username must be unique !",
-        "alreadyFriend": "This user is already your friend!"
+        "alreadyFriend": "This user is already your friend !",
+        "connectionError":"There is connection error !"
     },
     "generals":{
         "ok":"Ok",

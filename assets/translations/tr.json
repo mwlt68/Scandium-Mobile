@@ -1,7 +1,9 @@
 {
     "apiKeys": {
         "usernameNotUnique": "Kullanıcı adı benzersiz olmalıdır!",
-        "alreadyFriend": "Bu kullanıcı zaten arkadaşınız!"
+        "alreadyFriend": "Bu kullanıcı zaten arkadaşınız!",
+        "connectionError":"Bağlantısı hatası mevcut !"
+
     },
     "generals": {
         "ok": "Tamam",
