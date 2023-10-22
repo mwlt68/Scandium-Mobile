@@ -1,5 +1,6 @@
 import 'package:formz/formz.dart';
-import 'package:scandium/product/constants/application_constants.dart';
+import 'package:scandium/core/init/extension/string_extension.dart';
+import 'package:scandium/core/init/locale_keys.g.dart';
 
 enum PasswordConfirmationValidationError { empty, mismatch }
 
@@ -25,9 +26,9 @@ class PasswordConfirmation
     if (!invalid) return null;
     switch (error) {
       case PasswordConfirmationValidationError.empty:
-        return ApplicationConstants.instance.emptyFieldText;
+        return LocaleKeys.generals_emptyFieldText.lcl;
       case PasswordConfirmationValidationError.mismatch:
-        return "Password confirmation does not match with your password.";
+        return LocaleKeys.pages_register_passwordConfirmationLabelText.lcl;
       default:
         return null;
     }
