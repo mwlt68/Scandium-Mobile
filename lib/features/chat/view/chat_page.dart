@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:scandium/core/init/extension/string_extension.dart';
+import 'package:scandium/core/init/locale_keys.g.dart';
 import 'package:scandium/features/chat/bloc/chat_bloc.dart';
 import 'package:scandium/features/chat/view/own_message_card.dart';
-import 'package:scandium/product/constants/application_constants.dart';
 import 'package:scandium/product/models/response/conversation_reponse_model.dart';
 import 'package:scandium/product/models/response/user_response_model.dart';
 import 'package:scandium/product/repositories/message/message_repository.dart';
 import 'package:scandium/product/widgets/progress_indicators/circular_progress_bloc_builder.dart';
 import 'package:scandium/product/widgets/scaffold/base_scaffold_bloc.dart';
+import 'package:scandium/product/widgets/text/localized_text.dart';
 import 'package:sticky_grouped_list/sticky_grouped_list.dart';
 
 class ChatPage extends StatelessWidget {
@@ -72,30 +74,9 @@ class ChatPage extends StatelessWidget {
           onSelected: (value) {},
           itemBuilder: (BuildContext contesxt) {
             return [
-              const PopupMenuItem(
-                value: "View Contact",
-                child: Text("View Contact"),
-              ),
-              const PopupMenuItem(
-                value: "Media, links, and docs",
-                child: Text("Media, links, and docs"),
-              ),
-              const PopupMenuItem(
-                value: "Whatsapp Web",
-                child: Text("Whatsapp Web"),
-              ),
-              const PopupMenuItem(
-                value: "Search",
-                child: Text("Search"),
-              ),
-              const PopupMenuItem(
-                value: "Mute Notification",
-                child: Text("Mute Notification"),
-              ),
-              const PopupMenuItem(
-                value: "Wallpaper",
-                child: Text("Wallpaper"),
-              ),
+              PopupMenuItem(
+                child: LocText(LocaleKeys.pages_chat_viewContact.lcl),
+              )
             ];
           },
         ),
@@ -112,15 +93,15 @@ class ChatPage extends StatelessWidget {
                   children: [
                     Text(
                       state.otherUser?.username ??
-                          ApplicationConstants.instance.emptyFieldText,
+                          LocaleKeys.generals_emptyFieldText.lcl,
                       style: const TextStyle(
                         fontSize: 18.5,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const Text(
-                      "today at 12:05",
-                      style: TextStyle(
+                    Text(
+                      LocaleKeys.pages_chat_lastSeenMessage.lcl,
+                      style: const TextStyle(
                         fontSize: 13,
                       ),
                     )
@@ -227,7 +208,7 @@ class ChatPage extends StatelessWidget {
   InputDecoration _messageCardInputDecoration(BuildContext context) {
     return InputDecoration(
       border: InputBorder.none,
-      hintText: "Type a message",
+      hintText: LocaleKeys.pages_chat_messageInputHintText.lcl,
       hintStyle: const TextStyle(color: Colors.grey),
       prefixIcon: IconButton(
         icon: const Icon(Icons.keyboard),
@@ -340,16 +321,18 @@ class ChatPage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  iconCreation(
-                      Icons.insert_drive_file, Colors.indigo, "Document"),
+                  iconCreation(Icons.insert_drive_file, Colors.indigo,
+                      LocaleKeys.pages_chat_document.lcl),
                   const SizedBox(
                     width: 40,
                   ),
-                  iconCreation(Icons.camera_alt, Colors.pink, "Camera"),
+                  iconCreation(Icons.camera_alt, Colors.pink,
+                      LocaleKeys.pages_chat_camera.lcl),
                   const SizedBox(
                     width: 40,
                   ),
-                  iconCreation(Icons.insert_photo, Colors.purple, "Gallery"),
+                  iconCreation(Icons.insert_photo, Colors.purple,
+                      LocaleKeys.pages_chat_gallary.lcl),
                 ],
               ),
               const SizedBox(
@@ -358,15 +341,18 @@ class ChatPage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  iconCreation(Icons.headset, Colors.orange, "Audio"),
+                  iconCreation(Icons.headset, Colors.orange,
+                      LocaleKeys.pages_chat_audio.lcl),
                   const SizedBox(
                     width: 40,
                   ),
-                  iconCreation(Icons.location_pin, Colors.teal, "Location"),
+                  iconCreation(Icons.location_pin, Colors.teal,
+                      LocaleKeys.pages_chat_location.lcl),
                   const SizedBox(
                     width: 40,
                   ),
-                  iconCreation(Icons.person, Colors.blue, "Contact"),
+                  iconCreation(Icons.person, Colors.blue,
+                      LocaleKeys.pages_chat_contact.lcl),
                 ],
               ),
             ],
