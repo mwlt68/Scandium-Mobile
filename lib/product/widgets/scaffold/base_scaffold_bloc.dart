@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
+import 'package:scandium/core/init/extension/string_extension.dart';
 import 'package:scandium/product/widgets/dialogs/show_alert_dialog.dart';
 import 'package:scandium/product/widgets/snackbars/scaffold_snackbar.dart';
 
@@ -52,13 +53,15 @@ class BaseScaffoldBlocListener<
       } else {
         if (state.errorKeys.isNotEmpty) {
           context.showScaffoldSnackbar(
-              text: state.errorKeys.join(','), color: Colors.redAccent);
+              text: state.errorKeys.getApiMessages(), color: Colors.redAccent);
         } else if (state.warningKeys.isNotEmpty) {
           context.showScaffoldSnackbar(
-              text: state.warningKeys.join(','), color: Colors.orangeAccent);
+              text: state.warningKeys.getApiMessages(),
+              color: Colors.orangeAccent);
         } else if (state.successfulKeys.isNotEmpty) {
           context.showScaffoldSnackbar(
-              text: state.successfulKeys.join(','), color: Colors.greenAccent);
+              text: state.successfulKeys.getApiMessages(),
+              color: Colors.greenAccent);
         }
       }
       state.clear();
@@ -94,13 +97,15 @@ class BaseScaffoldBlocListener<
       } else {
         if (state.errorKeys.isNotEmpty) {
           context.showScaffoldSnackbar(
-              text: state.errorKeys.join(','), color: Colors.redAccent);
+              text: state.errorKeys.getApiMessages(), color: Colors.redAccent);
         } else if (state.warningKeys.isNotEmpty) {
           context.showScaffoldSnackbar(
-              text: state.warningKeys.join(','), color: Colors.orangeAccent);
+              text: state.warningKeys.getApiMessages(),
+              color: Colors.orangeAccent);
         } else if (state.successfulKeys.isNotEmpty) {
           context.showScaffoldSnackbar(
-              text: state.successfulKeys.join(','), color: Colors.greenAccent);
+              text: state.successfulKeys.getApiMessages(),
+              color: Colors.greenAccent);
         }
       }
       state.clear();

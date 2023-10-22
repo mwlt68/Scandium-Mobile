@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:scandium/core/extensions/date_extension.dart';
+import 'package:scandium/core/init/extension/string_extension.dart';
+import 'package:scandium/core/init/locale_keys.g.dart';
 import 'package:scandium/features/authentication/bloc/authentication_bloc.dart';
 import 'package:scandium/features/chat/view/chat_page.dart';
 import 'package:scandium/features/home/bloc/home_bloc.dart';
+import 'package:scandium/product/constants/application_constants.dart';
 import 'package:scandium/product/models/response/message_response_model.dart';
 import 'package:scandium/product/repositories/user/user_repository.dart';
 
@@ -50,7 +53,7 @@ class CustomCard extends StatelessWidget {
                       ),
                       title: Text(
                         messageModel.getOtherUserName(state.user?.id) ??
-                            "Sender",
+                            LocaleKeys.widgets_senderText.lcl,
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -67,7 +70,8 @@ class CustomCard extends StatelessWidget {
                           ),
                           Flexible(
                             child: Text(
-                              messageModel.content ?? '',
+                              messageModel.content ??
+                                  ApplicationConstants.instance.empty,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontSize: 13,
@@ -76,8 +80,8 @@ class CustomCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      trailing:
-                          Text(messageModel.createDate?.getFormatted() ?? ''),
+                      trailing: Text(messageModel.createDate?.getFormatted() ??
+                          ApplicationConstants.instance.empty),
                     )
                   ],
                 ),

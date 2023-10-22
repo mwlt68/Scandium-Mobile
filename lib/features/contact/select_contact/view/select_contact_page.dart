@@ -1,5 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scandium/core/init/extension/string_extension.dart';
+import 'package:scandium/core/init/locale_keys.g.dart';
 import 'package:scandium/features/chat/view/chat_page.dart';
 import 'package:scandium/features/contact/new_contact/view/new_contact_page.dart';
 import 'package:scandium/features/contact/select_contact/bloc/select_contact_bloc.dart';
@@ -69,9 +72,9 @@ class SelectContactPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Select Contact",
-          style: TextStyle(
+        Text(
+          LocaleKeys.pages_selectContact_pageTitle.lcl,
+          style: const TextStyle(
             fontSize: 19,
             fontWeight: FontWeight.bold,
           ),
@@ -79,7 +82,8 @@ class SelectContactPage extends StatelessWidget {
         BlocBuilder<SelectContactBloc, SelectContactState>(
           builder: (context, state) {
             return Text(
-              "${state.users?.length ?? 0} contacts",
+              LocaleKeys.pages_selectContact_contactCountText
+                  .tr(args: [(state.users?.length ?? 0).toString()]),
               style: const TextStyle(
                 fontSize: 13,
               ),
@@ -121,9 +125,9 @@ class SelectContactPage extends StatelessWidget {
 
   InkWell _newContactCard(BuildContext context) {
     return InkWell(
-      child: const ButtonCard(
+      child: ButtonCard(
         iconData: Icons.person_add,
-        name: "New contact",
+        name: LocaleKeys.pages_selectContact_newContact.lcl,
       ),
       onTap: () {
         Navigator.push(context,
@@ -136,9 +140,9 @@ class SelectContactPage extends StatelessWidget {
   }
 
   ButtonCard _newGroupCard() {
-    return const ButtonCard(
+    return ButtonCard(
       iconData: Icons.group,
-      name: "New group",
+      name: LocaleKeys.pages_selectContact_newGroup.lcl,
     );
   }
 }

@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scandium/core/init/extension/string_extension.dart';
+import 'package:scandium/core/init/locale_keys.g.dart';
 import 'package:scandium/features/home/bloc/home_bloc.dart';
 import 'package:scandium/features/home/view/chat_list_page.dart';
+import 'package:scandium/product/constants/application_constants.dart';
 import 'package:scandium/product/repositories/message/message_repository.dart';
 import 'package:scandium/product/repositories/user/user_repository.dart';
 import 'package:scandium/product/widgets/progress_indicators/circular_progress_bloc_builder.dart';
 import 'package:scandium/product/widgets/scaffold/base_scaffold_bloc.dart';
+import 'package:scandium/product/widgets/text/localized_text.dart';
+part 'home_values.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,6 +25,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
+  _HomeValues values = _HomeValues();
   @override
   void initState() {
     super.initState();
@@ -46,11 +52,11 @@ class _HomePageState extends State<HomePage>
     return CircularProgressBlocBuilder<HomeBloc, HomeState, HomeEvent>(
         getChild: (c, s) => TabBarView(
               controller: _controller,
-              children: const [
-                Text("CAMERA"),
+              children: [
+                LocText(LocaleKeys.pages_home_cameraTab.lcl),
                 ChatListPage(),
-                Text("STATUS"),
-                Text("CALLS"),
+                LocText(LocaleKeys.pages_home_statusTab.lcl),
+                LocText(LocaleKeys.pages_home_callsTab.lcl),
               ],
             ));
   }
@@ -60,7 +66,7 @@ class _HomePageState extends State<HomePage>
         child: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
             return AppBar(
-              title: const Text("Whatsapp Clone"),
+              title: Text(ApplicationConstants.instance.appName),
               actions: _appBarActions,
               bottom: _appBarBottom(),
             );
@@ -74,26 +80,9 @@ class _HomePageState extends State<HomePage>
       PopupMenuButton<String>(
         itemBuilder: (BuildContext contesxt) {
           return [
-            const PopupMenuItem(
-              value: "New group",
-              child: Text("New group"),
-            ),
-            const PopupMenuItem(
-              value: "New broadcast",
-              child: Text("New broadcast"),
-            ),
-            const PopupMenuItem(
-              value: "Whatsapp Web",
-              child: Text("Whatsapp Web"),
-            ),
-            const PopupMenuItem(
-              value: "Starred messages",
-              child: Text("Starred messages"),
-            ),
-            const PopupMenuItem(value: "Settings", child: Text("Settings")),
             PopupMenuItem(
-              value: "LogOut",
-              child: const Text("Log Out"),
+              value: values.logOutKey,
+              child: LocText(LocaleKeys.pages_home_logOut.lcl),
               onTap: () async {
                 contesxt.read<HomeBloc>().add(const LogOutSubmitted());
               },
@@ -113,18 +102,18 @@ class _HomePageState extends State<HomePage>
   }
 
   List<Widget> get tabs {
-    return const [
-      Tab(
+    return [
+      const Tab(
         icon: Icon(Icons.camera_alt),
       ),
       Tab(
-        text: "CHATS",
+        text: LocaleKeys.pages_home_chatsTab.lcl,
       ),
       Tab(
-        text: "STATUS",
+        text: LocaleKeys.pages_home_statusTab.lcl,
       ),
       Tab(
-        text: "CALLS",
+        text: LocaleKeys.pages_home_callsTab.lcl,
       )
     ];
   }

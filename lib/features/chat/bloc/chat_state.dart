@@ -12,7 +12,7 @@ class ChatState extends BaseState<ChatState> {
       super.warningKeys,
       super.dialogModel}) {
     this.messages = messages ?? List.empty(growable: true);
-    this.content = content ?? '';
+    this.content = content ?? ApplicationConstants.instance.empty;
   }
   late List<ConversationMessageModel> messages;
   late String content;

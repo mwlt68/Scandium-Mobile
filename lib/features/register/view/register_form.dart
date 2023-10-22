@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:scandium/core/init/extension/string_extension.dart';
+import 'package:scandium/core/init/locale_keys.g.dart';
 import 'package:scandium/features/login/view/login_page.dart';
 import 'package:scandium/features/register/bloc/register_bloc.dart';
+import 'package:scandium/product/widgets/text/localized_text.dart';
 import '../../../product/widgets/progress_indicators/circular_progress_bloc_builder.dart';
 
 part 'register_form_values.dart';
 
 class RegisterForm extends StatelessWidget {
-  RegisterForm({super.key});
-  final _RegisterFormValues _values = _RegisterFormValues();
+  const RegisterForm({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +46,7 @@ class _UsernameInput extends StatelessWidget {
               .read<RegisterBloc>()
               .add(RegisterUsernameChanged(username)),
           decoration: InputDecoration(
-              labelText: _values.usernameLabelText,
+              labelText: LocaleKeys.pages_register_usernameLabelText.lcl,
               errorText: state.username.getErrorMessage()),
         );
       },
@@ -66,7 +68,7 @@ class _PasswordInput extends StatelessWidget {
               .read<RegisterBloc>()
               .add(RegisterPasswordChanged(password)),
           decoration: InputDecoration(
-              labelText: _values.passwordLabelText,
+              labelText: LocaleKeys.pages_register_passwordLabelText.lcl,
               errorText: state.password.getErrorMessage()),
           obscureText: true,
         );
@@ -89,7 +91,8 @@ class _PasswordConfirmationInput extends StatelessWidget {
               .read<RegisterBloc>()
               .add(RegisterPasswordConfirmChanged(passwordConfirmation)),
           decoration: InputDecoration(
-              labelText: _values.passwordConfirmationLabelText,
+              labelText:
+                  LocaleKeys.pages_register_passwordConfirmationLabelText.lcl,
               errorText: state.passwordConfirm.getErrorMessage()),
           obscureText: true,
         );
@@ -102,8 +105,6 @@ class _PasswordConfirmationInput extends StatelessWidget {
 }
 
 class _RegisterOrLogin extends StatelessWidget {
-  final _RegisterFormValues _values = _RegisterFormValues();
-
   @override
   Widget build(BuildContext context) {
     return CircularProgressBlocBuilder<RegisterBloc, RegisterState,
@@ -122,7 +123,10 @@ class _RegisterOrLogin extends StatelessWidget {
   Row _loginRow(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [Text(_values.registerInfoText), _loginButton(context)],
+      children: [
+        const LocText(LocaleKeys.pages_register_registerInfoText),
+        _loginButton(context)
+      ],
     );
   }
 
@@ -133,7 +137,7 @@ class _RegisterOrLogin extends StatelessWidget {
                 context.read<RegisterBloc>().add(const RegisterSubmitted());
               }
             : null,
-        child: Text(_values.registerPageButtonText));
+        child: const LocText(LocaleKeys.pages_register_registerPageButtonText));
   }
 
   TextButton _loginButton(BuildContext context) {
@@ -143,7 +147,7 @@ class _RegisterOrLogin extends StatelessWidget {
             MaterialPageRoute(builder: (builder) => const LoginPage()),
             (route) => false);
       },
-      child: Text(_values.loginButtonText),
+      child: const LocText(LocaleKeys.pages_register_loginButtonText),
     );
   }
 }

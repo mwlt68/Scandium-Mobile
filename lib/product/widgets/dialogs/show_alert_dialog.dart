@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:scandium/core/init/extension/string_extension.dart';
+import 'package:scandium/core/init/locale_keys.g.dart';
 
 extension AlertDialogHelpers on BuildContext {
   void showAlertDialog(
@@ -28,7 +30,7 @@ extension AlertDialogHelpers on BuildContext {
           () {
             Navigator.of(context).pop();
           },
-      child: Text(buttonText ?? "OK",
+      child: Text(buttonText ?? LocaleKeys.generals_ok.lcl,
           style:
               TextStyle(color: isSuccess == true ? Colors.green : Colors.red)),
     );

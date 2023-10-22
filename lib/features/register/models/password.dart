@@ -1,5 +1,6 @@
 import 'package:formz/formz.dart';
-import 'package:scandium/product/constants/application_constants.dart';
+import 'package:scandium/core/init/extension/string_extension.dart';
+import 'package:scandium/core/init/locale_keys.g.dart';
 
 enum PasswordValidationError { empty, invalid }
 
@@ -23,9 +24,9 @@ class Password extends FormzInput<String, PasswordValidationError> {
     if (!invalid) return null;
     switch (error) {
       case PasswordValidationError.empty:
-        return ApplicationConstants.instance.emptyFieldText;
+        return LocaleKeys.generals_emptyFieldText.lcl;
       case PasswordValidationError.invalid:
-        return "Passsword contain at least one uppercase letter, one lowercase letter and one number.";
+        return LocaleKeys.pages_login_passwordValidationText.lcl;
       default:
         return null;
     }

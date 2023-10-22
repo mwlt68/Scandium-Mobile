@@ -6,6 +6,7 @@ class ApplicationConstants {
   }
 
   ApplicationConstants._init();
+  final appName = 'SCANDIUM';
   final String baseUrl = 'http://localhost:5227/';
   final String mobileBaseUrl = 'http://10.0.2.2:5227/';
 
@@ -14,7 +15,7 @@ class ApplicationConstants {
   final int whiteColor = 0xFFF5F5F5;
   final int pinkColor = 0xFFFC5185;
 
-  final String unexpectedErrorDefaultMessage = 'Unexpected error occured !';
-  final String emptyFieldText = 'This field cannot be left blank !';
-  final String nullField = '';
+  final String empty = '';
+  final String localizationApiKey = 'apiKeys.';
+  final String langPath = 'assets/translations';
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scandium/core/init/locale_keys.g.dart';
 import 'package:scandium/features/login/bloc/login_bloc.dart';
 import 'package:scandium/features/login/view/login_form.dart';
 import 'package:scandium/product/repositories/user/user_repository.dart';
 import 'package:scandium/product/widgets/scaffold/base_scaffold_bloc.dart';
+import 'package:scandium/product/widgets/text/localized_text.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -18,7 +20,7 @@ class LoginPage extends StatelessWidget {
       create: (context) => LoginBloc(
           userRepository: RepositoryProvider.of<UserRepository>(context)),
       child: Scaffold(
-        appBar: AppBar(title: const Text('Login')),
+        appBar: AppBar(title: const LocText(LocaleKeys.pages_login_pageTitle)),
         body: const Padding(
           padding: EdgeInsets.all(12),
           child: LoginForm(),
