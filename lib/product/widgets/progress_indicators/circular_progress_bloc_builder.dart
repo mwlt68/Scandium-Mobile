@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
+import 'package:scandium/product/constants/application_constants.dart';
 
 class CircularProgressBlocBuilder<
     TBloc extends BaseBloc<TEvent, TState>,
@@ -28,7 +29,8 @@ class CircularProgressBlocBuilder<
         );
       } else if (hasMessage != null && hasMessage!(state) == true) {
         return Center(
-          child: Text(message ?? defaultMessage ?? ''),
+          child: Text(
+              message ?? defaultMessage ?? ApplicationConstants.instance.empty),
         );
       } else {
         return getChild(context, state);

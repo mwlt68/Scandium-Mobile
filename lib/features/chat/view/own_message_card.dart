@@ -31,7 +31,7 @@ class OwnMessageCard extends StatelessWidget {
                   bottom: 20,
                 ),
                 child: Text(
-                  message?.content ?? ApplicationConstants.instance.nullField,
+                  message?.content ?? ApplicationConstants.instance.empty,
                   style: TextStyle(
                     fontSize: textSize + 6,
                   ),
@@ -44,7 +44,7 @@ class OwnMessageCard extends StatelessWidget {
                   children: [
                     Text(
                       message?.createdAt?.getTime ??
-                          ApplicationConstants.instance.nullField,
+                          ApplicationConstants.instance.empty,
                       style: TextStyle(
                         fontSize: textSize,
                         color: Colors.grey[600],

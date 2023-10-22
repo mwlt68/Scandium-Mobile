@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:scandium/product/constants/application_constants.dart';
 
 extension ScaffoldSnackbarHelpers on BuildContext {
   void showScaffoldSnackbar({String? text, Color? color}) {
@@ -15,7 +16,7 @@ extension ScaffoldSnackbarHelpers on BuildContext {
 
   SnackBar _getSnackBar(String? text, Color? color) {
     var snackBar = SnackBar(
-      content: Text(text ?? ''),
+      content: Text(text ?? ApplicationConstants.instance.empty),
       backgroundColor: color,
     );
     ScaffoldMessenger.of(this)

@@ -4,6 +4,7 @@ import 'package:scandium/core/extensions/list_extension.dart';
 import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
 import 'package:scandium/core/init/bloc/extension/emitter_extension.dart';
 import 'package:scandium/core/init/bloc/model/base_bloc_dialog_model.dart';
+import 'package:scandium/product/constants/application_constants.dart';
 import 'package:scandium/product/hub/message_hub.dart';
 import 'package:scandium/product/models/response/conversation_reponse_model.dart';
 import 'package:scandium/product/models/response/message_response_model.dart';
@@ -78,7 +79,8 @@ class ChatBloc extends BaseBloc<ChatEvent, ChatState> {
         if (message != null) {
           message.didTransmit = true;
         }
-        emitter(state.copyWith(messages: messages, content: ''));
+        emitter(state.copyWith(
+            messages: messages, content: ApplicationConstants.instance.empty));
       } else {
         emitter.emitErrorKeys(state, conversationResponse?.errorContents);
       }
