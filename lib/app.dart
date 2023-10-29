@@ -91,9 +91,16 @@ class _AppViewState extends State<AppView> {
         );
       },
       theme: ThemeData(
-          primaryColor: Color(ApplicationConstants.instance.blueColor),
-          appBarTheme: AppBarTheme(
-              backgroundColor: Color(ApplicationConstants.instance.blueColor))),
+        primaryColor: Color(ApplicationConstants.instance.blueColor),
+        appBarTheme: AppBarTheme(
+            backgroundColor: Color(ApplicationConstants.instance.blueColor)),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: Color(ApplicationConstants.instance.blueColor),
+        ),
+        colorScheme: ThemeData()
+            .colorScheme
+            .copyWith(primary: Color(ApplicationConstants.instance.blueColor)),
+      ),
       onGenerateRoute: (_) => SplashPage.route(),
     );
   }

@@ -76,10 +76,11 @@ class _NewContactPageState extends State<NewContactPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextField(
+                style: const TextStyle(color: Colors.white),
                 key: Key(_values.searchInputKey),
                 decoration: InputDecoration(
-                  labelText: LocaleKeys.pages_newContact_searchLabelText.lcl,
-                ),
+                    labelText: LocaleKeys.pages_newContact_searchLabelText.lcl,
+                    labelStyle: const TextStyle(color: Colors.white)),
                 onChanged: (value) => context.read<NewContactBloc>().add(
                       SearchValueChanged(value),
                     ),
