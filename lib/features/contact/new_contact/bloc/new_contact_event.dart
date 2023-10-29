@@ -1,6 +1,6 @@
 part of 'new_contact_bloc.dart';
 
-abstract class NewContactEvent extends Equatable {
+abstract class NewContactEvent extends BaseEvent {
   const NewContactEvent();
 
   @override

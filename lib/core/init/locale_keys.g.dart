@@ -1,0 +1,65 @@
+// DO NOT EDIT. This is code generated via package:easy_localization/generate.dart
+
+abstract class  LocaleKeys {
+  static const apiKeys_usernameNotUnique = 'apiKeys.usernameNotUnique';
+  static const apiKeys_alreadyFriend = 'apiKeys.alreadyFriend';
+  static const apiKeys = 'apiKeys';
+  static const generals_ok = 'generals.ok';
+  static const generals_emptyFieldText = 'generals.emptyFieldText';
+  static const generals_unexpectedErrorDefaultMessage = 'generals.unexpectedErrorDefaultMessage';
+  static const generals = 'generals';
+  static const widgets_statusText = 'widgets.statusText';
+  static const widgets_senderText = 'widgets.senderText';
+  static const widgets = 'widgets';
+  static const pages_login_pageTitle = 'pages.login.pageTitle';
+  static const pages_login_usernameLabelText = 'pages.login.usernameLabelText';
+  static const pages_login_usernameErrorText = 'pages.login.usernameErrorText';
+  static const pages_login_passwordLabelText = 'pages.login.passwordLabelText';
+  static const pages_login_passwordErrorText = 'pages.login.passwordErrorText';
+  static const pages_login_registerPageButtonText = 'pages.login.registerPageButtonText';
+  static const pages_login_loginButtonText = 'pages.login.loginButtonText';
+  static const pages_login_registerInfoText = 'pages.login.registerInfoText';
+  static const pages_login_usernameValidationText = 'pages.login.usernameValidationText';
+  static const pages_login_passwordValidationText = 'pages.login.passwordValidationText';
+  static const pages_login = 'pages.login';
+  static const pages_register_pageTitle = 'pages.register.pageTitle';
+  static const pages_register_usernameLabelText = 'pages.register.usernameLabelText';
+  static const pages_register_passwordLabelText = 'pages.register.passwordLabelText';
+  static const pages_register_registerPageButtonText = 'pages.register.registerPageButtonText';
+  static const pages_register_passwordConfirmationLabelText = 'pages.register.passwordConfirmationLabelText';
+  static const pages_register_loginButtonText = 'pages.register.loginButtonText';
+  static const pages_register_registerInfoText = 'pages.register.registerInfoText';
+  static const pages_register_registrationSuccessfulText = 'pages.register.registrationSuccessfulText';
+  static const pages_register_passwordConfirmDoesnotMatch = 'pages.register.passwordConfirmDoesnotMatch';
+  static const pages_register = 'pages.register';
+  static const pages_home_cameraTab = 'pages.home.cameraTab';
+  static const pages_home_statusTab = 'pages.home.statusTab';
+  static const pages_home_callsTab = 'pages.home.callsTab';
+  static const pages_home_chatsTab = 'pages.home.chatsTab';
+  static const pages_home_logOut = 'pages.home.logOut';
+  static const pages_home = 'pages.home';
+  static const pages_selectContact_pageTitle = 'pages.selectContact.pageTitle';
+  static const pages_selectContact_contactCountText = 'pages.selectContact.contactCountText';
+  static const pages_selectContact_newContact = 'pages.selectContact.newContact';
+  static const pages_selectContact_newGroup = 'pages.selectContact.newGroup';
+  static const pages_selectContact = 'pages.selectContact';
+  static const pages_newContact_searchLabelText = 'pages.newContact.searchLabelText';
+  static const pages_newContact = 'pages.newContact';
+  static const pages_contactRequest_noDataMessage = 'pages.contactRequest.noDataMessage';
+  static const pages_contactRequest_following = 'pages.contactRequest.following';
+  static const pages_contactRequest_approve = 'pages.contactRequest.approve';
+  static const pages_contactRequest_followRequestText = 'pages.contactRequest.followRequestText';
+  static const pages_contactRequest = 'pages.contactRequest';
+  static const pages_chat_viewContact = 'pages.chat.viewContact';
+  static const pages_chat_lastSeenMessage = 'pages.chat.lastSeenMessage';
+  static const pages_chat_messageInputHintText = 'pages.chat.messageInputHintText';
+  static const pages_chat_document = 'pages.chat.document';
+  static const pages_chat_camera = 'pages.chat.camera';
+  static const pages_chat_gallary = 'pages.chat.gallary';
+  static const pages_chat_audio = 'pages.chat.audio';
+  static const pages_chat_location = 'pages.chat.location';
+  static const pages_chat_contact = 'pages.chat.contact';
+  static const pages_chat = 'pages.chat';
+  static const pages = 'pages';
+
+}

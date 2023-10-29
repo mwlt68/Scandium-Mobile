@@ -1,34 +1,51 @@
 part of 'new_contact_bloc.dart';
 
-class NewContactState extends Equatable {
-  const NewContactState(
+class NewContactState extends BaseState<NewContactState> {
+  NewContactState(
       {this.searcResultUsers,
       this.searchValue = '',
-      this.isLoading = false,
-      this.errorMessage,
-      this.successMessage});
-
-  @override
-  List<Object?> get props =>
-      [searcResultUsers, searchValue, isLoading, errorMessage];
+      super.status,
+      super.errorKeys,
+      super.successfulKeys,
+      super.warningKeys,
+      super.dialogModel});
 
   final String? searchValue;
-  final List<UserResponseModel>? searcResultUsers;
-  final bool? isLoading;
-  final String? errorMessage;
-  final String? successMessage;
+  final List<UserSearchResponseModel>? searcResultUsers;
 
   NewContactState copyWith(
       {String? searchValue,
-      bool? isLoading,
-      List<UserResponseModel>? searcResultUsers,
-      String? errorMessage,
-      String? successMessage}) {
+      List<UserSearchResponseModel>? searcResultUsers,
+      BaseStateStatus? status,
+      List<String>? errorKeys,
+      List<String>? successfulKeys,
+      List<String>? warningKeys,
+      BaseBlocDialogModel? dialogModel}) {
     return NewContactState(
         searchValue: searchValue ?? this.searchValue,
-        isLoading: isLoading ?? this.isLoading,
         searcResultUsers: searcResultUsers ?? this.searcResultUsers,
-        successMessage: successMessage,
-        errorMessage: errorMessage);
+        dialogModel: dialogModel ?? this.dialogModel,
+        errorKeys: errorKeys ?? this.errorKeys,
+        successfulKeys: successfulKeys ?? this.successfulKeys,
+        warningKeys: warningKeys ?? this.warningKeys,
+        status: status ?? this.status);
   }
+
+  @override
+  NewContactState copyWithBase(
+      {BaseStateStatus? status,
+      List<String>? errorKeys,
+      List<String>? warningKeys,
+      List<String>? successfulKeys,
+      BaseBlocDialogModel? dialogModel}) {
+    return copyWith(
+        status: status,
+        dialogModel: dialogModel,
+        errorKeys: errorKeys,
+        warningKeys: warningKeys,
+        successfulKeys: successfulKeys);
+  }
+
+  @override
+  List<Object?> get subProps => [searcResultUsers, searchValue];
 }

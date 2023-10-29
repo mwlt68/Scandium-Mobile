@@ -19,7 +19,11 @@ dependencies:
   jwt_decoder: ^2.0.1
   cupertino_icons: ^1.0.2
   flutter_svg: ^2.0.5
-  intl: ^0.18.1
+  intl: ^0.17.0
+  flutter_guid: ^0.3.1
+  sticky_grouped_list: ^3.1.0
+  signalr_netcore: ^1.2.4
+  easy_localization: ^3.0.3
   flutter:
     sdk: flutter
 
@@ -37,3 +41,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+    - assets/translations/

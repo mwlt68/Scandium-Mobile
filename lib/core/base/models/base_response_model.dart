@@ -18,6 +18,8 @@ abstract class BaseResponseModel<T> {
       (isCustomException == null || isCustomException == false) &&
       (isValidationError == null || isValidationError == false) &&
       errorContents == null;
+
+  bool isValueNull();
 }
 
 class ErrorResponseContent {
@@ -79,6 +81,9 @@ class ListBaseResponseModel<T extends IFromMappable>
 
   @override
   bool get hasNotError => value != null && super.hasNotError;
+
+  @override
+  bool isValueNull() => value == null;
 }
 
 class SingleBaseResponseModel<T extends IFromMappable>
@@ -115,4 +120,7 @@ class SingleBaseResponseModel<T extends IFromMappable>
 
   @override
   bool get hasNotError => value != null && super.hasNotError;
+
+  @override
+  bool isValueNull() => value == null;
 }

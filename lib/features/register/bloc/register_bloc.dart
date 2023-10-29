@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'package:scandium/core/init/bloc/bloc/base_bloc.dart';
+import 'package:scandium/core/init/bloc/extension/emitter_extension.dart';
+import 'package:scandium/core/init/bloc/model/base_bloc_dialog_model.dart';
 import 'package:scandium/features/register/models/password.dart';
 import 'package:scandium/features/register/models/password_confirmation.dart';
 import 'package:scandium/features/register/models/username.dart';
@@ -11,10 +13,10 @@ import 'package:scandium/product/repositories/user/user_repository.dart';
 part 'register_event.dart';
 part 'register_state.dart';
 
-class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
+class RegisterBloc extends BaseBloc<RegisterEvent, RegisterState> {
   RegisterBloc({required UserRepository userRepository})
       : _userRepository = userRepository,
-        super(const RegisterState()) {
+        super(RegisterState(status: BaseStateStatus.success)) {
     on<RegisterUsernameChanged>(_onUsernameChanged);
     on<RegisterPasswordChanged>(_onPasswordChanged);
     on<RegisterPasswordConfirmChanged>(_onPasswordConfirmationChanged);
@@ -31,7 +33,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     emit(
       state.copyWith(
         username: username,
-        status:
+        formStatus:
             Formz.validate([username, state.password, state.passwordConfirm]),
       ),
     );
@@ -51,7 +53,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       state.copyWith(
         password: password,
         passwordConfirm: passwordConfirmation,
-        status:
+        formStatus:
             Formz.validate([password, state.username, state.passwordConfirm]),
       ),
     );
@@ -66,33 +68,21 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     emit(
       state.copyWith(
         passwordConfirm: passwordConfirmation,
-        status: Formz.validate(
+        formStatus: Formz.validate(
             [passwordConfirmation, state.username, state.password]),
       ),
     );
   }
 
   Future<void> _onSubmitted(
-      RegisterSubmitted event, Emitter<RegisterState> emit) async {
-    if (state.status.isValidated) {
-      emit(state.copyWith(status: FormzStatus.submissionInProgress));
-      try {
-        var response = await _userRepository.register(state.username.value,
-            state.password.value, state.passwordConfirm.value);
-        if (response?.value != null && response!.hasNotError) {
-          emit(state.copyWith(
-              status: FormzStatus.submissionSuccess,
-              errorMessage: null,
-              registered: true));
-        } else {
-          emit(state.copyWith(
-              status: FormzStatus.submissionFailure,
-              errorMessage: response?.errorMessage));
-        }
-      } catch (e) {
-        emit(state.copyWith(
-            status: FormzStatus.submissionFailure, errorMessage: null));
-      }
+      RegisterSubmitted event, Emitter<RegisterState> emitter) async {
+    if (state.formStatus.isValidated) {
+      await emitter.emit(
+        state: state,
+        requestOperation: _userRepository.register(state.username.value,
+            state.password.value, state.passwordConfirm.value),
+        getSuccessfulState: (response) => state.copyWith(registered: true),
+      );
     }
   }
 }

@@ -1,15 +1,15 @@
 import 'package:scandium/core/base/models/mappable.dart';
 
 class ApproveRequestModel extends IToMappable {
-  String? senderId;
+  String? friendshipRequestId;
   ApproveRequestModel({
-    this.senderId,
+    this.friendshipRequestId,
   });
 
   @override
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'senderId': senderId,
+      'friendshipRequestId': friendshipRequestId,
     };
   }
 }

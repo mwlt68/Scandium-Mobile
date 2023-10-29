@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scandium/features/authentication/bloc/authentication_bloc.dart';
@@ -67,6 +68,9 @@ class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
       navigatorKey: _navigatorKey,
       builder: (context, child) {
         return BlocListener<AuthenticationBloc, AuthenticationState>(
@@ -87,9 +91,16 @@ class _AppViewState extends State<AppView> {
         );
       },
       theme: ThemeData(
-          primaryColor: Color(ApplicationConstants.instance.blueColor),
-          appBarTheme: AppBarTheme(
-              backgroundColor: Color(ApplicationConstants.instance.blueColor))),
+        primaryColor: Color(ApplicationConstants.instance.blueColor),
+        appBarTheme: AppBarTheme(
+            backgroundColor: Color(ApplicationConstants.instance.blueColor)),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: Color(ApplicationConstants.instance.blueColor),
+        ),
+        colorScheme: ThemeData()
+            .colorScheme
+            .copyWith(primary: Color(ApplicationConstants.instance.blueColor)),
+      ),
       onGenerateRoute: (_) => SplashPage.route(),
     );
   }

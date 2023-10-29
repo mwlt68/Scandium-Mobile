@@ -1,30 +1,48 @@
 part of 'contact_request_bloc.dart';
 
-class ContactRequestState extends Equatable {
-  const ContactRequestState(
-      {this.requestedUsers,
-      this.isLoading = false,
-      this.errorMessage,
-      this.successMessage});
+class ContactRequestState extends BaseState<ContactRequestState> {
+  ContactRequestState(
+      {this.friendshipResponses,
+      super.status,
+      super.errorKeys,
+      super.successfulKeys,
+      super.warningKeys,
+      super.dialogModel});
 
   @override
-  List<Object?> get props => [requestedUsers, isLoading, errorMessage];
+  List<Object?> get subProps => [friendshipResponses];
 
-  final List<UserResponseModel>? requestedUsers;
-  final bool? isLoading;
-  final String? errorMessage;
-  final String? successMessage;
+  final List<FriendshipResponseModel>? friendshipResponses;
 
   ContactRequestState copyWith(
-      {String? searchValue,
-      bool? isLoading,
-      List<UserResponseModel>? requestedUsers,
-      String? errorMessage,
-      String? successMessage}) {
+      {List<FriendshipResponseModel>? friendshipResponses,
+      String? successMessage,
+      BaseStateStatus? status,
+      List<String>? errorKeys,
+      List<String>? successfulKeys,
+      List<String>? warningKeys,
+      BaseBlocDialogModel? dialogModel}) {
     return ContactRequestState(
-        isLoading: isLoading ?? this.isLoading,
-        requestedUsers: requestedUsers ?? this.requestedUsers,
-        successMessage: successMessage,
-        errorMessage: errorMessage);
+        friendshipResponses: friendshipResponses ?? this.friendshipResponses,
+        dialogModel: dialogModel ?? this.dialogModel,
+        errorKeys: errorKeys ?? this.errorKeys,
+        successfulKeys: successfulKeys ?? this.successfulKeys,
+        warningKeys: warningKeys ?? this.warningKeys,
+        status: status ?? this.status);
+  }
+
+  @override
+  ContactRequestState copyWithBase(
+      {BaseStateStatus? status,
+      List<String>? errorKeys,
+      List<String>? warningKeys,
+      List<String>? successfulKeys,
+      BaseBlocDialogModel? dialogModel}) {
+    return copyWith(
+        status: status,
+        dialogModel: dialogModel,
+        errorKeys: errorKeys,
+        warningKeys: warningKeys,
+        successfulKeys: successfulKeys);
   }
 }

@@ -1,5 +1,6 @@
 import 'package:formz/formz.dart';
-import 'package:scandium/product/constants/application_constants.dart';
+import 'package:scandium/core/init/extension/string_extension.dart';
+import 'package:scandium/core/init/locale_keys.g.dart';
 
 enum UsernameValidationError { empty, invalid }
 
@@ -19,9 +20,9 @@ class Username extends FormzInput<String, UsernameValidationError> {
     if (!invalid) return null;
     switch (error) {
       case UsernameValidationError.empty:
-        return ApplicationConstants.instance.emptyFieldText;
+        return LocaleKeys.generals_emptyFieldText.lcl;
       case UsernameValidationError.invalid:
-        return "Username can consist of 7 alphanumeric characters.";
+        return LocaleKeys.pages_login_usernameValidationText.lcl;
       default:
         return null;
     }

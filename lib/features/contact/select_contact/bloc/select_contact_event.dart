@@ -1,6 +1,6 @@
 part of 'select_contact_bloc.dart';
 
-class SelectContactEvent extends Equatable {
+class SelectContactEvent extends BaseEvent {
   const SelectContactEvent();
 
   @override
@@ -8,3 +8,11 @@ class SelectContactEvent extends Equatable {
 }
 
 class GetContactsEvent extends SelectContactEvent {}
+
+class RequestApproveEvent extends SelectContactEvent {
+  final FriendshipResponseModel model;
+  const RequestApproveEvent(this.model);
+
+  @override
+  List<Object> get props => [model];
+}

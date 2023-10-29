@@ -1,28 +1,49 @@
 part of 'home_bloc.dart';
 
-class HomeState extends Equatable {
-  const HomeState();
+class HomeState extends BaseState<HomeState> {
+  late List<MessageResponseModel> messages;
+
+  HomeState(
+      {List<MessageResponseModel>? messages,
+      super.status,
+      super.errorKeys,
+      super.successfulKeys,
+      super.warningKeys,
+      super.dialogModel}) {
+    this.messages = messages ?? List.empty();
+  }
+
+  HomeState copyWith(
+      {List<MessageResponseModel>? messages,
+      BaseStateStatus? status,
+      List<String>? errorKeys,
+      List<String>? successfulKeys,
+      List<String>? warningKeys,
+      BaseBlocDialogModel? dialogModel}) {
+    return HomeState(
+        messages: messages ?? this.messages,
+        dialogModel: dialogModel ?? this.dialogModel,
+        errorKeys: errorKeys ?? this.errorKeys,
+        successfulKeys: successfulKeys ?? this.successfulKeys,
+        warningKeys: warningKeys ?? this.warningKeys,
+        status: status ?? this.status);
+  }
 
   @override
-  List<Object?> get props => [];
-}
-
-class HomeLoadedState extends HomeState {
-  const HomeLoadedState({required this.messages});
-  final List<MessageResponseModel> messages;
-}
-
-class HomeLoading extends HomeState {
-  const HomeLoading();
-  @override
-  List<Object> get props => [];
-}
-
-class HomeErrorState extends HomeState {
-  const HomeErrorState(this.error);
-
-  final String? error;
+  List<Object?> get subProps => [messages];
 
   @override
-  List<Object?> get props => [error];
+  HomeState copyWithBase(
+      {BaseStateStatus? status,
+      List<String>? errorKeys,
+      List<String>? warningKeys,
+      List<String>? successfulKeys,
+      BaseBlocDialogModel? dialogModel}) {
+    return copyWith(
+        status: status,
+        dialogModel: dialogModel,
+        errorKeys: errorKeys,
+        warningKeys: warningKeys,
+        successfulKeys: successfulKeys);
+  }
 }
