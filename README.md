@@ -1,6 +1,8 @@
 # 📝 What is Scandium Mobile
 
-Scandium is a real-time messaging application that I personally developed.
+Scandium is a real-time messaging application.
+I personally developed.
+The user registers with his/her username and password. He logs into the system with his information. Sends friend requests to other users. If the request is accepted, users can send messages to each other.
 
 Scandium Mobile is Scandium's mobile part developed with  <b> Flutter </b>.
 
