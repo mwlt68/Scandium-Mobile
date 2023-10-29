@@ -11,7 +11,7 @@ class ButtonCard extends StatelessWidget {
     return ListTile(
       leading: CircleAvatar(
         radius: 23,
-        backgroundColor: const Color(0xFF25D366),
+        backgroundColor: Theme.of(context).primaryColor,
         child: Icon(
           iconData,
           size: 26,
