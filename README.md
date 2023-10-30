@@ -8,6 +8,7 @@ Scandium Mobile is Scandium's mobile part developed with  <b> Flutter </b>.
 
 You can check out how I developed <b>backend project</b> by visiting the [Scandium.Backend](https://github.com/mwlt68/Scandium.Backend)
 
+UI provided from [Whatsapp-Clone-Flutter](https://github.com/DevStack06/Whatsapp-Clone-Flutter) repository.
 
 # 🤔 What technologies does include ?
 
@@ -19,22 +20,26 @@ You can check out how I developed <b>backend project</b> by visiting the [Scandi
 
 # 🎉 Demo Video
 
-[Demo Video](https://github.com/mwlt68/Scandium-Mobile/assets/41743936/e3d59617-01a7-4812-8e64-87f5344ae3e7)
+[Demo Video](https://github.com/mwlt68/Scandium-Mobile/assets/41743936/aeb9ce50-4b60-40c7-8894-a62b78b1e397)
 
 
 # 🎉 Project Images
 
 Login Page               | Register Page            | Chats Page               
 :-------------------------:|:-------------------------:|:-------------------------:
-![](https://github.com/mwlt68/Scandium-Mobile/assets/41743936/6235151a-9cf3-4e66-8b34-298d19f118df?raw=true)|![](https://github.com/mwlt68/Scandium-Mobile/assets/41743936/a63f00a1-3e20-47c3-a37b-c08ef3fab160?raw=true)|![](https://github.com/mwlt68/Scandium-Mobile/assets/41743936/db59f693-6c14-42a7-9d24-b194be5eceb4?raw=true)
+![S](https://github.com/mwlt68/Scandium-Mobile/assets/41743936/846a6395-5e86-4717-85d7-05726966816b)|![S](https://github.com/mwlt68/Scandium-Mobile/assets/41743936/a8d410aa-336d-4f25-8995-a9774b19643f)|![S](https://github.com/mwlt68/Scandium-Mobile/assets/41743936/13cc171c-33a4-4c89-b0d0-11b54af8c41d)
+
 
 Select Contact Page               | Search Page            | Follow Requests Page               
 :-------------------------:|:-------------------------:|:-------------------------:
-![](https://github.com/mwlt68/Scandium-Mobile/assets/41743936/057b164e-4b6b-4dc4-b1e3-7532b156765a)|![](https://github.com/mwlt68/Scandium-Mobile/assets/41743936/9eab9ba1-4f3d-4544-8db3-8c5554972033)|![](https://github.com/mwlt68/Scandium-Mobile/assets/41743936/8f4ff6ec-d004-4892-9af7-462b5cb655a6)
+![S](https://github.com/mwlt68/Scandium-Mobile/assets/41743936/3c5bfef4-b1ae-4609-9a00-1e0672824383)|![S](https://github.com/mwlt68/Scandium-Mobile/assets/41743936/cc8e42e0-0997-45b7-8b39-e1995090d9be)|![S](https://github.com/mwlt68/Scandium-Mobile/assets/41743936/ad5319d7-534a-4c9e-9670-47806daa266e)
+
+
 
 Chat Page               | Localization TR           | Localization TR                
 :-------------------------:|:-------------------------:|:-------------------------:
-![](https://github.com/mwlt68/Scandium-Mobile/assets/41743936/031b645e-bcba-468f-89e0-6d374331410d)|![](https://github.com/mwlt68/Scandium-Mobile/assets/41743936/4e245b49-2602-4721-bca7-a341e11236e0)|![](https://github.com/mwlt68/Scandium-Mobile/assets/41743936/82b8cd92-2bce-4560-8429-ad36fd11c2d0)
+![S](https://github.com/mwlt68/Scandium-Mobile/assets/41743936/f199d6de-4247-478c-a491-2efedd000cb1)|![S](https://github.com/mwlt68/Scandium-Mobile/assets/41743936/33cd857d-f653-4091-8b58-a2663ffa41cb)|![S](https://github.com/mwlt68/Scandium-Mobile/assets/41743936/f74985b2-0223-4a4f-9f32-6107ef91fcd6)
+
 
 
 # 🚀 Running the project
